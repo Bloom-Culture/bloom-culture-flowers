@@ -72,52 +72,104 @@
   let loaded = false;
   let loadP = null;
 
+  const customerId = (window.BC_CUSTOMER && window.BC_CUSTOMER.id) || "test-customer";
+
+  function handleLoadedData(j) {
+    if (j && typeof j === 'object') {
+      const merged = Object.assign({}, j, slots);
+      for (const k in slots) {
+        if (merged[k] && !merged[k].u && j[k]) {
+          merged[k].u = typeof j[k] === 'string' ? j[k] : j[k].u;
+        }
+      }
+      for (const id of tombstones) delete merged[id];
+      slots = merged;
+    }
+    tombstones.clear();
+    loaded = true;
+    subs.forEach((fn) => fn());
+  }
+
   function load() {
     if (loadP) return loadP;
-    // Seed from an embedded full-state snapshot (image + framing) when present,
-    // so static/bundled builds with no sidecar render exactly as authored.
     if (window.BC_SLOT_STATE && typeof window.BC_SLOT_STATE === 'object') {
       slots = Object.assign({}, window.BC_SLOT_STATE, slots);
     }
-    loadP = fetch(STATE_FILE)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => {
-        // Merge: sidecar loses to any in-memory change that raced ahead of
-        // the fetch (drop or clear) so neither is clobbered by hydration.
-        if (j && typeof j === 'object') {
-          const merged = Object.assign({}, j, slots);
-          // A framing-only write that raced ahead of hydration must not
-          // drop a user image that's only on disk — inherit u from the
-          // sidecar for any in-memory entry that lacks one.
-          for (const k in slots) {
-            if (merged[k] && !merged[k].u && j[k]) {
-              merged[k].u = typeof j[k] === 'string' ? j[k] : j[k].u;
-            }
+    
+    const supabase = window.BC_SUPABASE_CLIENT;
+    if (supabase && customerId) {
+      loadP = supabase.from('planner_state')
+        .select('value')
+        .eq('customer_id', customerId)
+        .eq('key', 'image_slots_state')
+        .maybeSingle()
+        .then(({ data, error }) => {
+          if (error) {
+            console.error("Supabase image slots load error:", error);
           }
-          for (const id of tombstones) delete merged[id];
-          slots = merged;
-        }
-        tombstones.clear();
-      })
-      .catch(() => {})
-      .then(() => { loaded = true; subs.forEach((fn) => fn()); });
+          const j = (data && data.value) || null;
+          handleLoadedData(j);
+        })
+        .catch((err) => {
+          console.error("Supabase image slots load exception:", err);
+          handleLoadedData(null);
+        });
+    } else {
+      loadP = fetch(STATE_FILE)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => {
+          handleLoadedData(j);
+        })
+        .catch(() => {
+          try {
+            const localSlots = localStorage.getItem("bcf.image_slots_state");
+            if (localSlots) handleLoadedData(JSON.parse(localSlots));
+          } catch(e){}
+        });
+    }
     return loadP;
   }
 
-  // Serialize writes so two near-simultaneous drops on different slots
-  // can't reorder at the backend and leave the sidecar with only the
-  // first. A save requested mid-flight just marks dirty and re-fires on
-  // completion with the then-current slots.
   let saving = false;
   let saveDirty = false;
   function save() {
     if (saving) { saveDirty = true; return; }
-    const w = window.omelette && window.omelette.writeFile;
-    if (!w) return;
-    saving = true;
-    Promise.resolve(w(STATE_FILE, JSON.stringify(slots)))
-      .catch(() => {})
-      .then(() => { saving = false; if (saveDirty) { saveDirty = false; save(); } });
+    
+    const supabase = window.BC_SUPABASE_CLIENT;
+    if (supabase && customerId) {
+      saving = true;
+      supabase.from('planner_state')
+        .upsert({
+          customer_id: customerId,
+          key: 'image_slots_state',
+          value: slots
+        })
+        .then(({ error }) => {
+          if (error) console.error("Supabase image slots save error:", error);
+          saving = false;
+          if (saveDirty) {
+            saveDirty = false;
+            save();
+          }
+        });
+    } else {
+      try {
+        localStorage.setItem("bcf.image_slots_state", JSON.stringify(slots));
+      } catch(e){}
+      
+      const w = window.omelette && window.omelette.writeFile;
+      if (!w) return;
+      saving = true;
+      Promise.resolve(w(STATE_FILE, JSON.stringify(slots)))
+        .catch(() => {})
+        .then(() => {
+          saving = false;
+          if (saveDirty) {
+            saveDirty = false;
+            save();
+          }
+        });
+    }
   }
 
   const S_MAX = 5;
@@ -161,6 +213,18 @@
     } finally {
       bitmap.close && bitmap.close();
     }
+  }
+
+  function dataURLtoBlob(dataurl) {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
   }
 
   // ── Custom element ──────────────────────────────────────────────────────
@@ -482,8 +546,28 @@
       const gen = ++this._gen;
       try {
         const w = this.clientWidth || this.offsetWidth || MAX_DIM;
-        const url = await toDataUrl(file, w);
+        let url = await toDataUrl(file, w);
         if (gen !== this._gen) return;
+
+        const supabase = window.BC_SUPABASE_CLIENT;
+        if (supabase && customerId && this.id) {
+          const blob = dataURLtoBlob(url);
+          const filePath = `${customerId}/${this.id}_${Date.now()}.webp`;
+          const { data, error } = await supabase.storage
+            .from('planner-images')
+            .upload(filePath, blob, {
+              contentType: 'image/webp',
+              cacheControl: '3600',
+              upsert: true
+            });
+          if (error) throw error;
+
+          const { data: urlData } = supabase.storage
+            .from('planner-images')
+            .getPublicUrl(filePath);
+          url = urlData.publicUrl;
+        }
+
         // Only exit reframe once the new image is in hand — a rejected type
         // or decode failure leaves the in-progress crop untouched.
         this._exitReframe(false);
@@ -494,7 +578,7 @@
         if (!this.id) { this._local = val; this._render(); }
       } catch (err) {
         if (gen !== this._gen) return;
-        this._setError('Could not read that image.');
+        this._setError('Could not read or upload that image.');
         console.warn('<image-slot> ingest failed:', err);
       }
     }
@@ -597,16 +681,15 @@
       this._ring.style.display = mask ? 'none' : '';
 
       // Controls and reframe entry gate on this so share links stay read-only.
-      const editable = !!(window.omelette && window.omelette.writeFile);
+      const editable = !!(window.omelette && window.omelette.writeFile) || (window.BC_SUPABASE_CLIENT !== null);
       this.toggleAttribute('data-editable', editable);
       this._sub.style.display = editable ? '' : 'none';
 
       // Content. The sidecar is also writable by the agent's write_file
-      // tool, so its value isn't guaranteed canvas-originated — only accept
-      // data:image/ URLs from it. The `src` attribute is author-controlled
-      // (Claude wrote it into the HTML) so it passes through unchanged.
+      // tool, so its value isn't guaranteed canvas-originated — accept
+      // either data:image/ URLs or public http/https URLs.
       let stored = this.id ? getSlot(this.id) : this._local;
-      if (stored && stored.u && !/^data:image\//i.test(stored.u)) stored = null;
+      if (stored && stored.u && !/^(data:image\/|https?:\/\/)/i.test(stored.u)) stored = null;
       const srcAttr = this.getAttribute('src') || '';
       this._userUrl = (stored && stored.u) || null;
       const url = this._userUrl || srcAttr;
