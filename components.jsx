@@ -5,7 +5,14 @@ const { useState, useEffect, useRef, useCallback } = React;
 /* ───────────────────── Supabase Client ───────────────────── */
 const supabaseUrl = window.BC_SUPABASE_URL || "";
 const supabaseKey = window.BC_SUPABASE_KEY || "";
-const supabase = (supabaseUrl && supabaseKey && window.supabase) ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+const supabase = (supabaseUrl && supabaseKey && window.supabase)
+  ? window.supabase.createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false,
+        detectSessionInUrl: false
+      }
+    })
+  : null;
 window.BC_SUPABASE_CLIENT = supabase;
 
 /* ───────────────────── persistence ───────────────────── */
@@ -26,6 +33,11 @@ if (supabase && customerId) {
           try { window.dispatchEvent(new CustomEvent("bcf-local", { detail: { key: row.key } })); } catch(e){}
         });
       }
+      isHydrated = true;
+      try { window.dispatchEvent(new Event("bcf-progress")); } catch(e){}
+    })
+    .catch((err) => {
+      console.error("Supabase load exception:", err);
       isHydrated = true;
       try { window.dispatchEvent(new Event("bcf-progress")); } catch(e){}
     });
@@ -64,6 +76,8 @@ function lsSet(key, val){
         value: val
       }).then(({ error }) => {
         if (error) console.error("Supabase upsert error for key " + key + ":", error);
+      }).catch((err) => {
+        console.error("Supabase upsert exception for key " + key + ":", err);
       });
     }, 500);
   }

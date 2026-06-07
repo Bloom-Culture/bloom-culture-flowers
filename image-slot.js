@@ -151,6 +151,14 @@
             saveDirty = false;
             save();
           }
+        })
+        .catch((err) => {
+          console.error("Supabase image slots save exception:", err);
+          saving = false;
+          if (saveDirty) {
+            saveDirty = false;
+            save();
+          }
         });
     } else {
       try {
