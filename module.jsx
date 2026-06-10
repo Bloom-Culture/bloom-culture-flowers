@@ -1243,7 +1243,7 @@ function MoodBoardStudio({ count, accent }) {
 
   const generate = async (paletteOverride) => {
     const srcs = grabImages();
-    if (srcs.length < 2) {setMsg("Add at least 2 photos to your board first 🌸");return;}
+    if (srcs.length < 1) {setMsg("Add at least 1 photo to your board first 🌸");return;}
     setBusy(true);setMsg("");
     try {
       const imgs = await Promise.all(srcs.map((s) => new Promise((res, rej) => {

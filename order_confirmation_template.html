@@ -1,0 +1,1090 @@
+{% capture email_title %}
+  {% if has_pending_payment %}
+    Thank you for your order!
+  {% else %}
+    Thank you for your purchase!
+  {% endif %}
+{% endcapture %}
+{% capture email_body %}
+  {% if has_pending_payment %}
+    {% if buyer_action_required %}
+      You’ll get a confirmation email after completing your payment.
+    {% else %}
+      Your payment is being processed. You'll get an email when your order is confirmed.
+    {% endif %}
+  {% else %}
+    {% if requires_shipping %}
+    {% case delivery_method %}
+        {% when 'pick-up' %}
+          You’ll receive an email when your order is ready for pickup.
+        {% when 'local' %}
+          Hi {{ customer.first_name }}, we're getting your order ready for delivery.
+        {% else %}
+          <p>We’ve received your order and your flowers will be on their way before you know it! Your order will be shipped via <b>FedEx Priority Overnight</b> and will be delivered on the date you selected to the shipping address listed below. Once your order ships you will receive the tracking info by email.</p>
+
+{% comment %} Check if the order contains the DIY Wedding Flower Planner or any qualifying item {% endcomment %}
+{% assign purchased_planner = false %}
+{% for line in line_items %}
+  {% assign title_down = line.title | downcase %}
+  {% if title_down contains 'planner' or title_down contains 'kit' or title_down contains 'package' or title_down contains 'consultation' or title_down contains 'wedding' %}
+    {% assign purchased_planner = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if purchased_planner %}
+<br>
+<h2>If you ordered the DIY Wedding Flower Planner</h2>
+<p>Your interactive workspace is ready! Log in to access your wedding checklist, worksheets, and timeline:</p>
+<p>
+  <a href="https://bloomcultureflowers.com/pages/diy-flower-planner" target="_blank" rel="noopener"><strong>Access Your Flower Planner →</strong></a>
+</p>
+{% endif %}
+
+<br>
+
+<h2>If you ordered a DIY Flower Kit</h2>
+
+<p>Keep an eye on your inbox — we’ll be sending:</p>
+
+<ul>
+  <li>
+    Arrangement recipes for the kit and package you ordered
+    <ul>
+      <li>What goes in each piece + stem counts</li>
+    </ul>
+  </li>
+  <li>
+    The DIY Wedding Flower Guide
+    <ul>
+      <li>Your planning &amp; prep playbook</li>
+    </ul>
+  </li>
+</ul>
+
+<p>
+  These will walk you through everything from supplies to timelines to tutorials.
+</p>
+<br>
+<h2><strong>Next Steps (Please Read!)</strong></h2>
+
+<p>
+  These steps will help ensure your DIY flower experience goes smoothly from start to finish.
+</p>
+<br>
+<h3><strong>1. Review your recipes &amp; gather supplies</strong></h3>
+
+<p>
+  If you ordered a flower kit or had a custom design, please look over each arrangement recipe and make sure you have the suggested tools and supplies ready to go.
+</p>
+<br>
+<h3><strong>2. Watch ALL the tutorials</strong></h3>
+
+<p>
+  We know it’s not as thrilling as Netflix, but watching the tutorials <em>before</em> flowers arrive makes everything run so much smoother — promise.
+</p>
+
+<p><strong>Watch here:</strong></p>
+
+<ul>
+  <li>
+    Website Tutorials →
+    <a href="https://bloomcultureflowers.com/blogs/tutorials" target="_blank" rel="noopener">
+      https://bloomcultureflowers.com/blogs/tutorials
+    </a>
+  </li>
+  <li>
+    YouTube Channel →
+    <a href="https://www.youtube.com/channel/UCj-DYu4CfnmFrgLXSqAyq4A?" target="_blank" rel="noopener">
+      https://www.youtube.com/channel/UCj-DYu4CfnmFrgLXSqAyq4A
+    </a>
+  </li>
+</ul>
+
+<p>
+  Be sure to start with <strong>Start Here</strong> →
+  <a href="https://youtu.be/TJcue3iFRmw?si=3FD_UkX5V0AphICA" target="_blank" rel="noopener">
+    https://youtu.be/TJcue3iFRmw
+  </a>
+</p>
+<br>
+<h3><strong>3. Read the DIY Wedding Flower Guide</strong></h3>
+
+<p>
+  This guide covers your full process: how to prep, hydrate, store, and design your flowers with confidence. It answers questions before they even come up.
+</p>
+
+<p>
+  <strong>TL;DR:</strong> Don’t miss <strong>Step 1 on pages 31 &amp; 33</strong> — it outlines exactly what to do when your flowers arrive.
+</p>
+
+<p>
+  <a href="https://cdn.shopify.com/s/files/1/0750/7984/4147/files/A_Guide_To_DIY_Wedding_Flowers_Bloomculure.pdf?v=1695057166" target="_blank" rel="noopener">
+    View the DIY Wedding Flower Guide
+  </a>
+</p>
+<br>
+<h3><strong>4. Double-check your shipping details</strong></h3>
+
+<p>
+  Your flowers will be sent to the address and delivery date listed below. Someone
+  <strong>must be present</strong> to receive FedEx Priority Overnight deliveries.
+  Let us know ASAP if you need to make any changes or updates.
+</p>
+<br>
+<h3><strong>Delivery Date Information</strong></h3>
+
+<p>
+  We ship all orders via <strong>FedEx Priority Overnight</strong> to ensure your flowers arrive as fresh as possible. Orders are packed and shipped the business day before your scheduled delivery date.
+</p>
+
+<p>
+  FedEx Priority Overnight is very reliable, but delays can occasionally happen due to weather or unexpected carrier issues. Although rare, these delays are outside of our control. We appreciate your understanding and will always do our best to assist if an issue arises.
+</p>
+
+<p>
+  Being prepared will help you have a smooth DIY experience. If you have questions at any point, just reply to this email — we’re here to help you every step of the way.
+</p>
+
+<p>
+  We can’t wait to see what you create!
+</p>
+
+<p>
+  All the best,<br>
+  <strong>The Bloom Culture Team</strong><br><a href="https://www.instagram.com/bloomcultureflowers/">@bloomcultureflowers</a>
+</p>
+
+
+  
+      {% endcase %}
+        {% if delivery_instructions != blank  %}
+          <p><b>Delivery information:</b> {{ delivery_instructions }}</p>
+        {% endif %}
+       {% if consolidated_estimated_delivery_time %}
+         <p>
+           Estimated delivery <b>{{ consolidated_estimated_delivery_time }}</b>
+         </p>
+       {% endif %}
+    {% endif %}
+  {% endif %}
+  {% assign gift_card_line_items = line_items | where: "gift_card" %}
+  {% assign found_gift_card_with_recipient_email = false %}
+  {% for line_item in gift_card_line_items %}
+    {% if line_item.properties["__shopify_send_gift_card_to_recipient"] and line_item.properties["Recipient email"] %}
+      {% assign found_gift_card_with_recipient_email = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  {% if found_gift_card_with_recipient_email %}
+    <p>Your gift card recipient will receive an email with their gift card code.</p>
+  {% elsif gift_card_line_items.first %}
+    <p>You’ll receive separate emails for any gift cards.</p>
+  {% endif %}
+{% endcapture %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>{{ email_title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="/assets/notifications/styles.css">
+  <style>
+    .button__cell { background: {{ shop.email_accent_color }}; }
+    a, a:hover, a:active, a:visited { color: {{ shop.email_accent_color }}; }
+  </style>
+</head>
+
+  <body>
+    <table class="body">
+      <tr>
+        <td>
+          <table class="header row">
+  <tr>
+    <td class="header__cell">
+      <center>
+
+        <table class="container">
+          <tr>
+            <td>
+
+              <table class="row">
+                <tr>
+                  <td class="shop-name__cell">
+                    {%- if shop.email_logo_url %}
+                      <img src="{{shop.email_logo_url}}" alt="{{ shop.name }}" width="{{ shop.email_logo_width }}">
+                    {%- else %}
+                      <h1 class="shop-name__text">
+                        <a href="{{shop.url}}">{{ shop.name }}</a>
+                      </h1>
+                    {%- endif %}
+                  </td>
+
+                    <td>
+                      <tr>
+                        <td class="order-number__cell">
+                          <span class="order-number__text">
+                            Order {{ order_name }}
+                          </span>
+                        </td>
+                      </tr>
+                      {%- if po_number %}
+                          <tr>
+                            <td class="po-number__cell">
+                              <span class="po-number__text">
+                                PO number #{{ po_number }}
+                              </span>
+                            </td>
+                          </tr>
+                      {%- endif %}
+                    </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row content">
+  <tr>
+    <td class="content__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              
+            <h2>{{ email_title }}</h2>
+            <p>{{ email_body }}</p>
+            {% assign transaction_count = transactions | size %}
+  {% if transaction_count > 0 %}
+    {% for transaction in transactions %}
+      {% if transaction.show_buyer_pending_payment_instructions? %}
+        <p> {{transaction.buyer_pending_payment_notice}} </p>
+        <p>
+        <table class="row">
+          <tr>
+            {% for instruction in transaction.buyer_pending_payment_instructions %}
+              <td>{{ instruction.header }}</td>
+            {% endfor %}
+            <td>Amount</td>
+          </tr>
+          <tr>
+            {% for instruction in transaction.buyer_pending_payment_instructions %}
+              <td>{{ instruction.value }}</td>
+            {% endfor %}
+            <td>{{transaction.amount | money}}</td>
+          </tr>
+        </table>
+        </p>
+      {% endif %}
+    {% endfor%}
+  {% endif %}
+
+            {% if order_status_url %}
+              <table class="row actions">
+  <tr>
+    <td class="empty-line">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="actions__cell">
+      <table class="button main-action-cell">
+        <tr>
+          <td class="button__cell"><a href="{{ order_status_url }}" class="button__text">View your order</a></td>
+        </tr>
+      </table>
+      {% if purchased_planner %}
+      <table class="button main-action-cell" style="margin-top: 15px;">
+        <tr>
+          <td class="button__cell" style="background-color: #2b4c3f;"><a href="https://bloomcultureflowers.com/pages/diy-flower-planner" class="button__text" style="color: #ffffff;">Access Your Flower Planner</a></td>
+        </tr>
+      </table>
+      {% endif %}
+      {% if shop.url %}
+    <table class="link secondary-action-cell">
+      <tr>
+        <td class="link__cell">or <a href="{{ shop.url }}">Visit our store</a></td>
+      </tr>
+    </table>
+{% endif %}
+
+    </td>
+  </tr>
+</table>
+
+            {% else %}
+              {% if shop.url %}
+    <table class="row actions">
+      <tr>
+        <td class="actions__cell">
+          <table class="button main-action-cell">
+            <tr>
+              <td class="button__cell"><a href="{{ shop.url }}" class="button__text">Visit our store</a></td>
+            </tr>
+          </table>
+          {% if purchased_planner %}
+          <table class="button main-action-cell" style="margin-top: 15px;">
+            <tr>
+              <td class="button__cell" style="background-color: #2b4c3f;"><a href="https://bloomcultureflowers.com/pages/diy-flower-planner" class="button__text" style="color: #ffffff;">Access Your Flower Planner</a></td>
+            </tr>
+          </table>
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+{% endif %}
+
+            {% endif %}
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+ {% ################################### %}
+{% # Customize these translations for your store language %}
+{% ################################### %}
+
+{% assign translated_method = "Delivery,Pick Up,Shipping"  | split: "," %}
+{% assign translated_days = "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday"  | split: "," %}
+
+{% ################################### %}
+{% # Don't modify the code below %}
+{% ################################### %}
+
+  {% assign keyValuePairs = nil %}
+  {% assign Bird_flag = true %}
+
+{% for line_item in line_items %}
+  {% for property in line_item.properties %}
+   {% if property.first == '_BirdChimeSlotId' and Bird_flag %}
+      {% assign Bird_flag = false %}
+    {% assign keyValuePairs = property.last | split: ";" %}
+      {% for pair in keyValuePairs %}
+        {% assign keyAndValue = pair | split: "=" %}
+        {% assign key = keyAndValue[0] %}
+        {% assign value = keyAndValue[1] %}
+        {% case key %}
+          {% when 'M' %}
+            {% if value == 'D' %}
+            {% assign Bird_Method = translated_method[0] %}
+            {% elsif value == 'P'%}
+              {% assign Bird_Method = translated_method[1] %}
+            {% elsif value == 'S'%}
+              {% assign Bird_Method = translated_method[2] %}
+            {% endif %}
+          {% when 'D' %}
+            {% assign Bird_Date = value %}
+          {% when 'L' %}
+            {% assign Bird_Location_Id = value %}
+          {% when 'T' %}
+            {% assign Bird_Time = value %}
+        {% endcase %}
+        {% assign bird_index = Bird_Date | date: "%w" | plus: 0 %}
+        {% assign Bird_Day =  translated_days[bird_index] %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+{% if order.attributes['Delivery Method'] and keyValuePairs == nil %}
+  {% if order.attributes['Delivery Method']  == 'Delivery' %}
+    {% assign Bird_Method = translated_method[0] %}
+  {% elsif order.attributes['Delivery Method']   == 'Pick Up'%}
+    {% assign Bird_Method = translated_method[1] %}
+  {% elsif order.attributes['Delivery Method']  == 'Delivery Date'%}
+    {% assign Bird_Method = translated_method[2] %}
+  {% endif %}
+  {% assign Bird_Date = order.attributes['Delivery Date'] %}
+  {% assign Bird_Time = order.attributes['Delivery Time'] %}
+
+  {% if Bird_Method == translated_method[1]  and order.attributes['Delivery Location'] %}
+    {% assign BIRD_LOCATION = order.attributes['Delivery Location'] %}
+  {% endif %}
+
+  {% if Bird_Method != translated_method[2] and order.attributes['Order Note'] %}
+    {% assign Bird_Note = order.attributes['Order Note'] %}
+  {% endif %}
+
+  {% assign bird_index = Bird_Date | date: "%w" | plus: 0 %}
+  {% assign Bird_Day =  translated_days[bird_index] %}
+{% endif %}
+
+{% if order.attributes['Translated Delivery Time'] %}
+  {% assign Bird_Time = order.attributes['Translated Delivery Time'] %}
+{% endif %}
+
+{% ################################### %}
+{% # Customize the display format below %}
+{% ################################### %}
+
+{% if Bird_Method %}
+  <table class="container">
+    <br/>
+    <tr>
+      <td>
+        <!-- <h4>Delivery Method</h4> -->
+        <!-- {{ Bird_Method }}<br> -->
+        <!-- {{ BIRD_LOCATION }} -->
+        {% if Bird_Date %}
+          <h4>Delivery Date</h4>
+          {{ Bird_Date | date: "%B %d, %Y" }}
+          {% if Bird_Time %}
+            {{ Bird_Time }}
+          {% endif %}
+          {% if Bird_Date %}
+            ({{ Bird_Day }})
+          {% endif %}
+        {% endif %}
+        {% if Bird_Note %}
+	  <h4>Order Note</h4>
+          {{ Bird_Note }} <br>
+	{% endif %}
+        <br/>
+      </td>
+    </tr>
+  </table>
+{% endif %}
+
+          
+<!-- {% if Bird_Method %}
+  <table class="container">
+    <br/>
+    <tr>
+      <td>
+        <h4>Delivery Method</h4>
+        {{ Bird_Method }}<br>
+        {{ BIRD_LOCATION }}
+        {% if Bird_Date %}
+          <h4>Shipping Date</h4>
+          {{ Bird_Date | date: "%m-%d-%Y" }}
+          {% if Bird_Time %}
+            {{ Bird_Time }}
+          {% endif %}
+          {% if Bird_Date %}
+            ({{ Bird_Day }})
+          {% endif %}
+        {% endif %}
+        <br/>
+      </td>
+    </tr>
+  </table>
+{% endif %} -->
+
+          <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Order summary</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+            
+<table class="row">
+  {% for line in subtotal_line_items %}
+  <tr class="order-list__item">
+    <td class="order-list__item__cell">
+      <table>
+        <td>
+          {% if line.image %}
+            <img src="{{ line | img_url: 'compact_cropped' }}" align="left" width="60" height="60" class="order-list__product-image"/>
+          {% endif %}
+        </td>
+        <td class="order-list__product-description-cell">
+          {% if line.product.title %}
+            {% assign line_title = line.product.title %}
+          {% else %}
+            {% assign line_title = line.title %}
+          {% endif %}
+
+          {% if line.quantity < line.quantity %}
+            {% capture line_display %} {{ line.quantity }} of {{ line.quantity }} {% endcapture %}
+          {% else %}
+            {% assign line_display = line.quantity  %}
+          {% endif %}
+
+          <span class="order-list__item-title">{{ line_title }}&nbsp;&times;&nbsp;{{ line_display }}</span>
+
+          {% if line.variant.title != 'Default Title' %}
+            <span class="order-list__item-variant">{{ line.variant.title }}</span><br/>
+          {% endif %}
+
+          {% for group in line.groups %}
+            <span class="order-list__item-variant">Part of: {{ group.display_title }}</span><br/>
+          {% endfor %}
+
+            {% if line.gift_card and line.properties["__shopify_send_gift_card_to_recipient"] %}
+              {% for property in line.properties %}
+  {% assign property_first_char = property.first | slice: 0 %}
+  {% if property.last != blank and property_first_char != '_' %}
+    <div class="order-list__item-property">
+      <dt>{{ property.first }}:</dt>
+      <dd>
+      {% if property.last contains '/uploads/' %}
+        <a href="{{ property.last }}" class="link" target="_blank">
+        {{ property.last | split: '/' | last }}
+        </a>
+      {% else %}
+        {{ property.last }}
+      {% endif %}
+      </dd>
+    </div>
+  {% endif %}
+{% endfor %}
+
+            {% endif %}
+
+          {% if line.selling_plan_allocation %}
+            <span class="order-list__item-variant">{{ line.selling_plan_allocation.selling_plan.name }}</span><br/>
+          {% endif %}
+
+          {% if line.refunded_quantity > 0 %}
+            <span class="order-list__item-refunded">Refunded</span>
+          {% endif %}
+
+          {% if line.discount_allocations %}
+            {% for discount_allocation in line.discount_allocations %}
+              {% if discount_allocation.discount_application.target_selection != 'all' %}
+              <p>
+                <span class="order-list__item-discount-allocation">
+                  <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+                  <span>
+                    {{ discount_allocation.discount_application.title | upcase }}
+                    (-{{ discount_allocation.amount | money }})
+                  </span>
+                </span>
+              </p>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </td>
+          <td class="order-list__price-cell">
+            {% if line.original_line_price != line.final_line_price %}
+              <del class="order-list__item-original-price">{{ line.original_line_price | money }}</del>
+            {% endif %}
+            <p class="order-list__item-price">
+              {% if line.final_line_price > 0 %}
+                {{ line.final_line_price | money }}
+              {% else %}
+                Free
+              {% endif %}
+            </p>
+          </td>
+      </table>
+    </td>
+  </tr>{% endfor %}
+</table>
+
+            <table class="row subtotal-lines">
+  <tr>
+    <td class="subtotal-spacer"></td>
+    <td>
+      <table class="row subtotal-table">
+
+        
+{% assign order_discount_count = 0 %}
+{% assign total_order_discount_amount = 0 %}
+{% assign has_shipping_discount = false %}
+
+{% for discount_application in discount_applications %}
+  {% if discount_application.target_selection == 'all' and discount_application.target_type == 'line_item' %}
+    {% assign order_discount_count = order_discount_count | plus: 1 %}
+    {% assign total_order_discount_amount = total_order_discount_amount | plus: discount_application.total_allocated_amount  %}
+  {% endif %}
+  {% if discount_application.target_type == 'shipping_line' %}
+    {% assign has_shipping_discount = true %}
+    {% assign shipping_discount = discount_application.title %}
+    {% assign shipping_amount = discount_application.total_allocated_amount %}
+  {% endif %}
+{% endfor %}
+
+
+
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Subtotal</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ subtotal_price | plus: total_order_discount_amount | money }}</strong>
+  </td>
+</tr>
+
+
+
+{% if order_discount_count > 0 %}
+  {% if order_discount_count == 1 %}
+    
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Order Discount</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>-{{ total_order_discount_amount | money }}</strong>
+  </td>
+</tr>
+
+  {% endif %}
+  {% if order_discount_count > 1 %}
+    
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Order Discounts</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>-{{ total_order_discount_amount | money }}</strong>
+  </td>
+</tr>
+
+  {% endif %}
+  {% for discount_application in discount_applications %}
+    {% if discount_application.target_selection == 'all' and discount_application.target_type != 'shipping_line' %}
+      <tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span class="subtotal-line__discount">
+        <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+        <span class="subtotal-line__discount-title">{{ discount_application.title }} (-{{ discount_application.total_allocated_amount | money }})</span>
+      </span>
+    </p>
+  </td>
+</tr>
+
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+
+        {% if delivery_method == 'pick-up' %}
+          
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Pickup</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ shipping_price | money }}</strong>
+  </td>
+</tr>
+
+        {% else %}
+          {% if has_shipping_discount %}
+  
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Shipping</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>Free</strong>
+  </td>
+</tr>
+
+  <tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span class="subtotal-line__discount">
+        <img src="{{ 'notifications/discounttag.png' | shopify_asset_url }}" width="18" height="18" class="discount-tag-icon" />
+        <span class="subtotal-line__discount-title">{{ shipping_discount }} (-{{ shipping_amount | money }})</span>
+      </span>
+    </p>
+  </td>
+</tr>
+
+{% else %}
+  
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Shipping</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ shipping_price | money }}</strong>
+  </td>
+</tr>
+
+{% endif %}
+
+        {% endif %}
+
+        {% if total_duties %}
+          
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Duties</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ total_duties | money }}</strong>
+  </td>
+</tr>
+
+        {% endif %}
+
+        
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Taxes</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ tax_price | money }}</strong>
+  </td>
+</tr>
+
+
+        {% if total_tip and total_tip > 0 %}
+          
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Tip</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ total_tip | money }}</strong>
+  </td>
+</tr>
+
+        {% endif %}
+      </table>
+      {% assign transaction_size = 0 %}
+      {% assign transaction_amount = 0 %}
+      {% for transaction in transactions %}
+        {% if transaction.status == "success" %}
+        {% unless transaction.kind == "authorization" or transaction.kind == "void" %}
+          {% assign transaction_size = transaction_size | plus: 1 %}
+          {% assign transaction_amount = transaction_amount | plus: transaction.amount %}
+        {% endunless %}
+        {% endif %}
+      {% endfor %}
+      <table class="row subtotal-table subtotal-table--total">
+      {% if payment_terms and payment_terms.automatic_capture_at_fulfillment == false or b2b?%}
+        {% assign due_at_date = payment_terms.next_payment.due_at | date: "%b %d, %Y" %}
+        
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Total paid today</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ transaction_amount | money_with_currency }}</strong>
+  </td>
+</tr>
+
+        <div class="payment-terms">
+          
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Total due {{ due_at_date }}</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ payment_terms.next_payment.amount_due | money_with_currency }}</strong>
+  </td>
+</tr>
+
+        </div>
+      {% else %}
+        
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Total</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ total_price | money_with_currency }}</strong>
+  </td>
+</tr>
+
+      {% endif %}
+      </table>
+
+      {% if total_discounts > 0 %}
+        <p class="total-discount">
+          You saved <span class="total-discount--amount">{{ total_discounts | money }}</span>
+        </p>
+      {% endif %}
+
+      {% unless payment_terms %}
+      {% if transaction_size > 1 or transaction_amount < total_price %}
+        <table class="row subtotal-table">
+          <tr><td colspan="2" class="subtotal-table__line"></td></tr>
+          <tr><td colspan="2" class="subtotal-table__small-space"></td></tr>
+
+          {% for transaction in transactions %}
+            {% if transaction.status == "success" and transaction.kind == "capture" or transaction.kind == "sale" %}
+              {% if transaction.payment_details.credit_card_company %}
+                {% capture transaction_name %}{{ transaction.payment_details.credit_card_company }} (ending in {{ transaction.payment_details.credit_card_last_four_digits }}){% endcapture %}
+              {% else %}
+                {% capture transaction_name %}{{ transaction.gateway_display_name }}{% endcapture %}
+              {% endif %}
+
+              
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>{{transaction_name}}</span>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>{{ transaction.amount | money }}</strong>
+  </td>
+</tr>
+
+            {% endif %}
+            {% if transaction.kind == 'refund' %}
+              {% if transaction.payment_details.credit_card_company %}
+                {% assign refund_method_title = transaction.payment_details.credit_card_company %}
+              {% else %}
+                {% assign refund_method_title = transaction.gateway %}
+              {% endif %}
+
+              
+<tr class="subtotal-line">
+  <td class="subtotal-line__title">
+    <p>
+      <span>Refund</span>
+        <br>
+        <small>{{ refund_method_title | capitalize }}</small>
+    </p>
+  </td>
+  <td class="subtotal-line__value">
+      <strong>- {{ transaction.amount | money }}</strong>
+  </td>
+</tr>
+
+            {% endif %}
+          {% endfor %}
+        </table>
+      {% endif %}
+
+
+      {% endunless %}
+    </td>
+  </tr>
+</table>
+
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row section">
+  <tr>
+    <td class="section__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              <h3>Customer information</h3>
+            </td>
+          </tr>
+        </table>
+        <table class="container">
+          <tr>
+            <td>
+              
+            <table class="row">
+              <tr>
+                {% if requires_shipping and shipping_address %}
+                  <td class="customer-info__item">
+                    <h4>Shipping address</h4>
+                    {{ shipping_address | format_address }}
+                  </td>
+                {% endif %}
+                {% if billing_address %}
+                  <td class="customer-info__item">
+                    <h4>Billing address</h4>
+                    {{ billing_address | format_address }}
+                  </td>
+                {% endif %}
+              </tr>
+            </table>
+            <table class="row">
+              <tr>
+                {% if company_location %}
+                  <td class="customer-info__item">
+                    <h4>Location</h4>
+                    <p>
+                      {{ company_location.name }}
+                    </p>
+                  </td>
+                {% endif %}
+                {% if transaction_size > 0 or payment_terms and payment_terms.automatic_capture_at_fulfillment == false or b2b? %}
+                  <td class="customer-info__item">
+                    <h4>Payment</h4>
+                    <p class="customer-info__item-content">
+                      {% if payment_terms %}
+                        {% assign due_date = payment_terms.next_payment.due_at | default: nil %}
+                        {% if payment_terms.type == 'receipt' or payment_terms.type == 'fulfillment' and payment_terms.next_payment.due_at == nil %}
+                          {{ payment_terms.translated_name }}<br>
+                        {% else %}
+                          {{ payment_terms.translated_name }}: Due {{ due_date | date: format: 'date' }}<br>
+                        {% endif %}
+                      {% endif %}
+                      {% if transaction_size > 0 %}
+                        {% for transaction in transactions %}
+                          {% if transaction.status == "success" or transaction.status == "pending" %}
+                            {% if transaction.kind == "capture" or transaction.kind == "sale" %}
+                              {% if transaction.payment_details.credit_card_company %}
+                                <img src="{{ transaction.payment_details.credit_card_company | payment_icon_png_url  }}" class="customer-info__item-credit" height="24" alt="{{ transaction.payment_details.credit_card_company }}">
+                                <span>ending with {{ transaction.payment_details.credit_card_last_four_digits }}</span><br>
+                              {% elsif transaction.gateway_display_name == "Gift card" %}
+                                <img src="{{ transaction.gateway_display_name | downcase | replace: ' ', '-'  | payment_type_img_url }}" class="customer-info__item-credit" height="24">
+                                ending with {{ transaction.payment_details.gift_card.last_four_characters | upcase }}<br>
+                                  &emsp;&emsp;&emsp;&nbsp;Gift card balance - <b>{{ transaction.payment_details.gift_card.balance |  money }}</b>
+                              {% elsif transaction.gateway_display_name != "Shop Cash" %}
+                                {{ transaction.gateway_display_name }}<br>
+                              {% endif %}
+                            {% elsif transaction.kind == "authorization" and transaction.gateway_display_name == "Shop Cash" %}
+                              <span>Shop Cash - <b>{{ transaction.amount | money }}</b></span>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </p>
+                  </td>
+                {% endif %}
+              </tr>
+
+     
+              <tr>
+                {% if requires_shipping and shipping_address %}
+                  {% if shipping_method %}
+                    <td class="customer-info__item">
+                      <h4>Shipping method</h4>
+                        <p>
+                          {% if delivery_promise_branded_shipping_line %}
+                            {{ delivery_promise_branded_shipping_line }}
+                          {% else %}
+                            {{ shipping_method.title }}
+                          {% endif %}
+                        </p>
+                    </td>
+                  {% endif %}
+                {% endif %}
+              </tr>   
+
+{% assign delivery_tag = '' %}
+
+{% for tag in order.tags %}
+  {% if tag contains 'Delivery Date:' %}
+    {% assign delivery_tag = tag %}
+  {% endif %}
+{% endfor %}
+
+{% if delivery_tag != '' %}
+<tr>
+  <td class="customer-info__item">
+    <h4>Delivery Details</h4>
+    <p>
+      <strong>Delivery Date:</strong>
+      {{ delivery_tag | remove: 'Delivery Date:' | strip }}
+    </p>
+  </td>
+</tr>
+{% endif %}
+
+              
+<!-- Old method of displaying delivery date -->
+              <!-- {% comment %}
+Bird App Delivery Info – only show if data exists
+{% endcomment %}
+{% if Bird_Date or Bird_Time or BIRD_LOCATION %}
+<tr>
+  <td class="customer-info__item">
+    <h4>Delivery Details (Bird App)</h4>
+    {% if Bird_Method %}
+      <p><strong>Shipping – FedEx Priority Overnight</strong> {{ Bird_Method }}</p>
+    {% endif %}
+    {% if Bird_Date %}
+      {% assign year = Bird_Date | slice: 0, 4 %}
+      {% assign month = Bird_Date | slice: 5, 2 %}
+      {% assign day = Bird_Date | slice: 8, 2 %}
+      {% assign month_index = month | minus: 1 %}
+      {% assign month_name = months[month_index] %}
+      <p><strong>Scheduled Delivery Date:</strong> {{ month_name }} {{ day | remove: "0" }}, {{ year }}</p>
+      {% if Bird_Day %}
+        <p><strong>Day of Week:</strong> {{ Bird_Day }}</p>
+      {% endif %}
+    {% endif %}
+    {% if Bird_Time %}
+      <p><strong>Delivery Time:</strong> {{ Bird_Time }}</p>
+    {% endif %}
+    {% if BIRD_LOCATION %}
+      <p><strong>Pickup Location:</strong> {{ BIRD_LOCATION }}</p>
+    {% endif %}
+  </td>
+</tr>
+{% endif %} -->
+
+     
+              <!-- <tr>
+                <h4>Shipping Date:</h4><p>{{ Bird_Date | date: "%m-%d-%Y" }}</p> -->
+            </table>
+
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+          <table class="row footer">
+  <tr>
+    <td class="footer__cell">
+      <center>
+        <table class="container">
+          <tr>
+            <td>
+              
+              <p class="disclaimer__subtext">If you have any questions, reply to this email or contact us at <a href="mailto:{{ shop.email }}">{{ shop.email }}</a></p>
+            </td>
+          </tr>
+        </table>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<img src="{{ 'notifications/spacer.png' | shopify_asset_url }}" class="spacer" height="1" />
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
