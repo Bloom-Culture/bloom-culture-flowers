@@ -1224,8 +1224,11 @@ function MoodBoardStudio({ count, accent }) {
       const el = document.getElementById("moodboard-" + i);
       let src = null;
       if (el) {
-        if (el.shadowRoot) {const img = el.shadowRoot.querySelector("img");if (img && img.src && img.src.startsWith("data:")) src = img.src;}
-        if (!src && el.getAttribute("src") && el.getAttribute("src").startsWith("data:")) src = el.getAttribute("src");
+        if (el.shadowRoot) {
+          const img = el.shadowRoot.querySelector("img");
+          if (img && img.src && (img.src.startsWith("data:") || img.src.startsWith("http"))) src = img.src;
+        }
+        if (!src && el.getAttribute("src") && (el.getAttribute("src").startsWith("data:") || el.getAttribute("src").startsWith("http"))) src = el.getAttribute("src");
       }
       if (src) out.push(src);
     }
