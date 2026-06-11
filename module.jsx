@@ -1250,7 +1250,9 @@ function MoodBoardStudio({ count, accent }) {
     setBusy(true);setMsg("");
     try {
       const imgs = await Promise.all(srcs.map((s) => new Promise((res, rej) => {
-        const im = new Image();im.onload = () => res(im);im.onerror = rej;im.src = s;
+        const im = new Image();
+        if (s.startsWith("http")) im.crossOrigin = "anonymous"; // prevent canvas CORS taint for Supabase URLs
+        im.onload = () => res(im);im.onerror = rej;im.src = s;
       })));
       try {if (document.fonts && document.fonts.ready) await document.fonts.ready;} catch (e) {}
       let logoImg = null;
