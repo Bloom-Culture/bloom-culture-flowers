@@ -2611,6 +2611,7 @@ function StepFlow({ flow, moduleId, accent }) {
               <div className="step-img" style={{ flexShrink: 0, alignSelf: "stretch" }}>
                 {React.createElement("image-slot", {
                   id: `${flow.slotPrefix || "prep-step"}-${i + 1}`, shape: "rect", placeholder: "Drop step illustration",
+                  static: "true",
                   ...(s.img ? { src: s.img } : {}),
                   style: { width: "100%", height: "100%", minHeight: "160px", display: "block" }
                 })}
@@ -2708,6 +2709,7 @@ function PhotoSlot({ photo, accent }) {
       <div style={{ position: "relative", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)" }}>
         {React.createElement("image-slot", {
           id: photo.id, shape: "rect", fit: photo.fit || "contain",
+          static: "true",
           ...(photo.src ? { src: photo.src } : {}),
           placeholder: photo.placeholder || "Drop a photo here",
           style: { width: "100%", aspectRatio: photo.ratio || "3 / 1", display: "block", background: "var(--cream-deep)" }
