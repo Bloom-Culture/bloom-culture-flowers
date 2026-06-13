@@ -2,7 +2,7 @@
 {% assign purchased_planner = false %}
 {% for line in line_items %}
   {% assign title_down = line.title | downcase %}
-  {% if title_down contains 'planner' or title_down contains 'kit' or title_down contains 'package' or title_down contains 'consultation' or title_down contains 'wedding' %}
+  {% if title_down contains 'planner' or title_down contains 'kit' or title_down contains 'package' or title_down contains 'consultation' or title_down contains 'wedding' or line.product.tags contains 'diy-planner-eligible' %}
     {% assign purchased_planner = true %}
     {% break %}
   {% endif %}
@@ -163,20 +163,14 @@
   {% comment %} ── Planner CTA: shown for all qualifying orders, shipping or digital ── {% endcomment %}
   {% if purchased_planner %}
   <br>
-  <h2>Start Your DIY Flower Planner!</h2>
-  <p>Your interactive planning workspace is ready and waiting — your mood board, budget planner, worksheets, and step-by-step timeline are all set up for you.</p>
-
-  <p><strong>Here's how to access it in 3 simple steps:</strong></p>
+  <h2>Your private planner is ready!</h2>
+  <p>Two quick things:</p>
   <ol>
-    <li style="margin-bottom:6px;"><strong>Click "Start Your Planner"</strong> below (or visit <a href="https://bloomcultureflowers.com/pages/diy-flower-planner" target="_blank" rel="noopener">bloomcultureflowers.com/pages/diy-flower-planner</a> any time).</li>
-    <li style="margin-bottom:6px;"><strong>Log in with the email address</strong> you used for this order — your planner is linked to your Bloom Culture account.</li>
-    <li style="margin-bottom:6px;"><strong>Start planning!</strong> We recommend beginning with the <em>Mood Board</em> to define your style, then the <em>Checklist</em> to build your flower list.</li>
+    <li style="margin-bottom:6px;"><strong>Click "Open My Planner"</strong> below (or visit <a href="https://bloomcultureflowers.com/pages/diy-flower-planner" target="_blank" rel="noopener">bloomcultureflowers.com/pages/diy-flower-planner</a> any time).</li>
+    <li style="margin-bottom:6px;"><strong>Log in with the email</strong> you checked out with.</li>
   </ol>
 
-  <p style="font-size:13px;color:#666;"><em>Your planner saves automatically and syncs across all your devices, so you can pick up exactly where you left off — on your phone, tablet, or laptop.</em></p>
-  <p>
-    <a href="https://bloomcultureflowers.com/pages/diy-flower-planner" target="_blank" rel="noopener"><strong>Start Your Planner &rarr;</strong></a>
-  </p>
+  <p>Then explore at your own pace — everything saves as you go.</p>
   {% endif %}
 
 
@@ -313,7 +307,7 @@
       {% if purchased_planner %}
       <table class="button main-action-cell" width="100%" style="width: 100%; margin-top: 15px;">
         <tr>
-          <td class="button__cell" style="background-color: #2b4c3f; width: 100%;"><a href="https://bloomcultureflowers.com/pages/diy-flower-planner" class="button__text" style="color: #ffffff; display: block; width: 100%; box-sizing: border-box;">Start Your Planner</a></td>
+          <td class="button__cell" style="background-color: #384d39; width: 100%;"><a href="https://bloomcultureflowers.com/pages/diy-flower-planner" class="button__text" style="color: #ffffff; display: block; width: 100%; box-sizing: border-box;">Open My Planner &rarr;</a></td>
         </tr>
       </table>
       {% endif %}
@@ -342,7 +336,7 @@
           {% if purchased_planner %}
           <table class="button main-action-cell" style="margin-top: 15px;">
             <tr>
-              <td class="button__cell" style="background-color: #2b4c3f;"><a href="https://bloomcultureflowers.com/pages/diy-flower-planner" class="button__text" style="color: #ffffff;">Start Your Planner 🌸</a></td>
+              <td class="button__cell" style="background-color: #384d39;"><a href="https://bloomcultureflowers.com/pages/diy-flower-planner" class="button__text" style="color: #ffffff;">Open My Planner &rarr;</a></td>
             </tr>
           </table>
           {% endif %}

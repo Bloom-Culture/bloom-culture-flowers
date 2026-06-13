@@ -12,10 +12,16 @@
 
 {% assign purchased_planner = false %}
 {% for line_item in checkout.line_items %}
-  {% if line_item.title contains 'DIY Wedding Flower Planner'
-     or line_item.title contains 'Flower Planner'
-     or line_item.product.handle == 'diy-wedding-flower-planner' %}
+  {% assign title_down = line_item.title | downcase %}
+  {% if title_down contains 'planner'
+     or title_down contains 'kit'
+     or title_down contains 'package'
+     or title_down contains 'consultation'
+     or title_down contains 'wedding'
+     or line_item.product.handle == 'diy-wedding-flower-planner'
+     or line_item.product.tags contains 'diy-planner-eligible' %}
     {% assign purchased_planner = true %}
+    {% break %}
   {% endif %}
 {% endfor %}
 
@@ -28,8 +34,8 @@
     margin: 28px 0 10px;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(43, 76, 63, 0.14);
-    border: 1.5px solid #c8ddd6;
+    box-shadow: 0 4px 24px rgba(56, 77, 57, 0.14);
+    border: 1.5px solid #aa2138;
   }
 
   #bcf-thankyou-widget * {
@@ -40,7 +46,7 @@
 
   /* Header strip */
   #bcf-thankyou-widget .bcf-header {
-    background: #2b4c3f;
+    background: #384d39;
     padding: 18px 24px;
     display: flex;
     align-items: center;
@@ -88,13 +94,13 @@
 
   #bcf-thankyou-widget .bcf-lead {
     font-size: 14px;
-    color: #3d5248;
+    color: #2c352a;
     line-height: 1.55;
     margin-bottom: 20px;
   }
 
   #bcf-thankyou-widget .bcf-lead strong {
-    color: #2b4c3f;
+    color: #384d39;
   }
 
   /* Steps */
@@ -111,7 +117,7 @@
     align-items: flex-start;
     gap: 12px;
     font-size: 13.5px;
-    color: #3d5248;
+    color: #2c352a;
     line-height: 1.4;
   }
 
@@ -119,7 +125,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: #2b4c3f;
+    background: #384d39;
     color: #f7f6f0;
     font-size: 11px;
     font-weight: 700;
@@ -135,7 +141,7 @@
     display: block;
     width: 100%;
     text-align: center;
-    background: #2b4c3f;
+    background: #384d39;
     color: #f7f6f0 !important;
     text-decoration: none !important;
     font-size: 15px;
@@ -144,26 +150,26 @@
     border-radius: 10px;
     letter-spacing: 0.01em;
     transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 2px 10px rgba(43, 76, 63, 0.22);
+    box-shadow: 0 2px 10px rgba(56, 77, 57, 0.22);
   }
 
   #bcf-thankyou-widget .bcf-cta:hover {
-    background: #1e3830;
+    background: #273728;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(43, 76, 63, 0.3);
+    box-shadow: 0 6px 18px rgba(56, 77, 57, 0.3);
   }
 
   /* Email nudge */
   #bcf-thankyou-widget .bcf-nudge {
     margin-top: 13px;
     font-size: 12px;
-    color: #7a9489;
+    color: #4a5c4b;
     text-align: center;
     line-height: 1.5;
   }
 
   #bcf-thankyou-widget .bcf-nudge strong {
-    color: #2b4c3f;
+    color: #384d39;
   }
 
   /* Divider */
@@ -190,8 +196,8 @@
   <div class="bcf-header">
     <div class="bcf-icon">🌸</div>
     <div class="bcf-header-text">
-      <div class="bcf-kicker">Your planner is ready</div>
-      <div class="bcf-title">Start Your DIY Flower Planner</div>
+      <div class="bcf-kicker">Your flowers start here 🌸</div>
+      <div class="bcf-title">Your private planner is ready.</div>
     </div>
   </div>
 
@@ -199,30 +205,20 @@
   <div class="bcf-body">
 
     <p class="bcf-lead">
-      Your interactive planning workspace is set up and waiting for you —
-      <strong>here's exactly how to get in:</strong>
+      Two quick things:
     </p>
 
     <ol class="bcf-steps">
       <li>
         <div class="bcf-step-num">1</div>
         <div>
-          <strong>Click "Start Your Planner" below</strong> — or visit
-          <em>bloomcultureflowers.com/pages/diy-flower-planner</em> any time.
+          <strong>Tap "Open My Planner" below</strong> (or visit <em>bloomcultureflowers.com/pages/diy-flower-planner</em> any time).
         </div>
       </li>
       <li>
         <div class="bcf-step-num">2</div>
         <div>
-          <strong>Log in with the same email address</strong> you used for this
-          order — your planner is linked to your Bloom Culture account.
-        </div>
-      </li>
-      <li>
-        <div class="bcf-step-num">3</div>
-        <div>
-          <strong>Start with the Mood Board</strong> to define your style, then
-          work through the <em>Checklist</em> to build your flower list.
+          <strong>Log in with the email</strong> you checked out with.
         </div>
       </li>
     </ol>
@@ -232,15 +228,16 @@
       class="bcf-cta"
       id="bcf-start-planner-btn"
     >
-      Start Your Planner &nbsp;
+      Open My Planner &rarr;
     </a>
 
     <hr class="bcf-divider" />
 
     <p class="bcf-nudge">
-      <strong>Check your confirmation email</strong> — we've also sent your
-      access instructions there so you can find this link any time.
-      Your planner saves automatically and works on any device.
+      Then explore at your own pace — everything saves as you go.
+    </p>
+    <p class="bcf-nudge-sub" style="font-size: 12px; color: #55665c; margin: 6px 0 0; line-height: 1.4;">
+      <em>Access details are in your confirmation email too.</em>
     </p>
 
   </div>
