@@ -45,10 +45,10 @@ function bcCalLinks(dateObj, title, details) {
   "&text=" + encodeURIComponent(title) +
   "&dates=" + startD + "/" + endD +
   "&details=" + encodeURIComponent(desc);
-  const ics = "data:text/calendar;charset=utf-8," + encodeURIComponent(
-    ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Bloom Culture//Flower Planner//EN", "BEGIN:VEVENT",
+  const icsContent = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Bloom Culture//Flower Planner//EN", "BEGIN:VEVENT",
     "DTSTART;VALUE=DATE:" + startD, "DTEND;VALUE=DATE:" + endD,
-    "SUMMARY:" + title, "DESCRIPTION:" + desc, "END:VEVENT", "END:VCALENDAR"].join("\r\n"));
+    "SUMMARY:" + title, "DESCRIPTION:" + desc, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const ics = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsContent);
   return { google, ics };
 }
 /* a label like "roughly Mar – May" for a months/weeks-out phase range */
