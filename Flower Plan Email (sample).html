@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your DIY flower quote — sample email</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cabin:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Archivo:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --sage:#384d39; --sage-deep:#2b3c2c; --sage-tint:#e7ece3;
+    --cream:#f7f6f0; --cream-deep:#eeece1;
+    --rose:#aa2138; --rose-deep:#8c1a2e; --rose-tint:#f5e2e4;
+    --ink:#2c352a; --ink-soft:#5d685a; --ink-faint:#8a9384;
+    --line:#e2e0d4; --line-strong:#cfd2c4;
+    --serif:'Cabin',Georgia,serif; --sans:'Montserrat',system-ui,sans-serif; --mono:'Archivo',monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:#d9d6c9; font-family:var(--sans); color:var(--ink); -webkit-font-smoothing:antialiased; padding:30px 16px; }
+  .client{ max-width:640px; margin:0 auto; }
+
+  .meta{ background:#fff; border:1px solid var(--line); border-radius:14px 14px 0 0; padding:16px 20px; border-bottom:0; }
+  .meta .subject{ font-family:var(--serif); font-weight:600; font-size:17px; color:var(--ink); }
+  .meta .row{ display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12.5px; color:var(--ink-soft); }
+  .meta .av{ width:30px; height:30px; border-radius:50%; background:var(--sage); color:var(--cream); display:grid; place-items:center; font-family:var(--mono); font-weight:700; font-size:12px; flex-shrink:0; }
+  .meta b{ color:var(--ink); font-weight:600; }
+  .pill{ margin-left:auto; font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--sage); border:1px solid var(--sage); border-radius:999px; padding:3px 9px; }
+
+  .email{ background:var(--cream); border:1px solid var(--line); border-radius:0 0 14px 14px; overflow:hidden; }
+  .head{ background:var(--sage-deep); color:#fff; padding:22px 26px; }
+  .head .tag{ font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; opacity:.85; }
+  .head h1{ font-family:var(--serif); font-weight:600; font-size:24px; line-height:1.15; margin-top:6px; }
+  .head h1 em{ font-style:italic; color:#cdd8c4; }
+
+  .body{ padding:24px 26px 8px; }
+  .hello{ font-size:15px; line-height:1.6; color:var(--ink); margin-bottom:22px; }
+
+  .sec{ font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--rose); margin:4px 0 12px; }
+  .sec.mt{ margin-top:26px; }
+
+  .totalbar{ background:var(--sage-deep); color:var(--cream); border-radius:12px; padding:16px 18px; }
+  .totalbar .tbrow{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .totalbar .tbship{ font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.02em; color:var(--cream); opacity:.92; margin-top:9px; padding-top:9px; border-top:1px solid rgba(247,246,240,.18); }
+  .totalbar .l{ font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.8; }
+  .totalbar .n{ font-family:var(--serif); font-weight:600; font-size:28px; }
+  .totalmeta{ font-size:12.5px; color:var(--ink-soft); text-align:center; margin-top:10px; }
+  .shipnote{ font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:.02em; color:var(--sage-deep); text-align:center; margin-top:9px; }
+
+  .cta{ text-align:center; margin:16px 0 4px; }
+  .cartbtn{ display:inline-block; text-decoration:none; background:var(--rose); color:#fff; font-family:var(--serif); font-weight:600; font-size:16px; border-radius:11px; padding:14px 28px; }
+  .ctasub{ font-size:12px; color:var(--ink-soft); margin-top:9px; }
+  .editlink{ display:inline-block; margin-top:12px; font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:.03em; color:var(--sage-deep); text-decoration:none; border-bottom:1px dashed var(--sage); padding-bottom:1px; }
+
+  .arr{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+  .arr .at{ font-family:var(--serif); font-weight:600; font-size:16px; color:var(--ink); display:flex; justify-content:space-between; gap:10px; }
+  .arr .aq{ font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--rose); white-space:nowrap; }
+  .ing{ display:flex; justify-content:space-between; gap:12px; font-size:13.5px; color:var(--ink); padding:5px 0; border-bottom:1px dotted var(--line); }
+  .ing:first-of-type{ margin-top:9px; }
+  .ing:last-child{ border-bottom:0; }
+  .ing .q{ color:var(--ink-soft); font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .disc{ background:var(--cream-deep); border-radius:12px; padding:13px 16px; font-size:12.5px; color:var(--ink-soft); line-height:1.6; margin-top:18px; }
+
+  .foot{ background:var(--cream-deep); border-top:1px solid var(--line); text-align:center; padding:20px 24px; margin-top:22px; }
+  .foot .copyr{ font-size:11.5px; line-height:1.6; color:var(--ink-soft); max-width:480px; margin:0 auto; }
+  .foot .fl{ font-family:var(--serif); font-style:italic; font-size:13px; color:var(--ink-faint); margin-top:12px; }
+
+  .caption{ max-width:640px; margin:14px auto 0; font-size:12px; color:#6b6a5e; text-align:center; line-height:1.6; }
+</style>
+</head>
+<body>
+  <div class="client">
+    <div class="meta">
+      <div class="subject">Your DIY flower quote is saved 🌸</div>
+      <div class="row"><span class="av">BC</span><span>from <b>Bloom Culture</b> &lt;hello@bloomcultureflowers.com&gt;</span><span class="pill">Your Copy</span></div>
+      <div class="row" style="margin-left:38px;">to hannah.reyes@email.com · just now</div>
+    </div>
+
+    <div class="email">
+      <div class="head">
+        <div class="tag">Bloom Culture™ · Build Your Own Package</div>
+        <h1>Your <em>DIY flower quote</em>, saved</h1>
+      </div>
+
+      <div class="body">
+        <p class="hello">Hi Hannah! Here’s the flower package you built, we saved it so you can come back to it any time. When you’re ready to purchase or edit, your flowers are waiting in your cart.</p>
+
+        <div class="sec">The package you built</div>
+        <div class="totalbar"><div class="tbrow"><span class="l">Your total</span><span class="n">$1,908</span></div><div class="tbship">&#10047; Your order qualifies for free shipping.</div></div>
+        <div class="totalmeta">Everything you need for the DIY wedding flower package you made.</div>
+        <div class="cta"><a class="cartbtn" href="#">View my cart &#8594;</a><div class="ctasub">Your flowers are saved. Review or check out any time.</div><a class="editlink" href="#">&#8617; Pick up where you left off</a></div>
+
+        <div class="sec mt">Your arrangements</div>
+
+        <div class="arr">
+          <div class="at">Bridal Bouquet <span class="aq">Qty 1</span></div>
+          <div class="ing"><span>Salal / Lemon Leaf</span><span class="q">1/5 bunch</span></div>
+          <div class="ing"><span>Eucalyptus, Silver Dollar</span><span class="q">1/5 bunch</span></div>
+          <div class="ing"><span>Garden Rose, Cappuccino</span><span class="q">8 stems</span></div>
+          <div class="ing"><span>Stock, White</span><span class="q">4 stems</span></div>
+          <div class="ing"><span>Spray Rose, Blush</span><span class="q">3 stems</span></div>
+          <div class="ing"><span>Ranunculus, White</span><span class="q">5 stems</span></div>
+        </div>
+
+        <div class="arr">
+          <div class="at">Bridesmaid Bouquet <span class="aq">Qty 3</span></div>
+          <div class="ing"><span>Eucalyptus, Seeded</span><span class="q">1/6 bunch</span></div>
+          <div class="ing"><span>Rose, White</span><span class="q">5 stems</span></div>
+          <div class="ing"><span>Spray Rose, Blush</span><span class="q">3 stems</span></div>
+          <div class="ing"><span>Lisianthus, White</span><span class="q">3 stems</span></div>
+        </div>
+
+        <div class="arr">
+          <div class="at">Centerpiece, Medium <span class="aq">Qty 8</span></div>
+          <div class="ing"><span>Salal / Lemon Leaf</span><span class="q">1/4 bunch</span></div>
+          <div class="ing"><span>Hydrangea, White</span><span class="q">2 stems</span></div>
+          <div class="ing"><span>Rose, White</span><span class="q">5 stems</span></div>
+          <div class="ing"><span>Carnation, Blush</span><span class="q">4 stems</span></div>
+          <div class="ing"><span>Stock, White</span><span class="q">3 stems</span></div>
+        </div>
+
+        <div class="disc">This quote reflects our current pricing. We understand you may not be ready to purchase, but if you come back at a later date, the total and pricing may have changed due to market fluctuation.</div>
+      </div>
+
+      <div class="foot">
+        <div class="copyr">This flower plan and its recipes were created by Bloom Culture™ for your personal use. Please keep them for yourself, they are our original work and may not be copied, shared, or distributed. © Bloom Culture™.</div>
+        <div class="fl">Made by florists, for DIY couples. · bloomcultureflowers.com</div>
+      </div>
+    </div>
+
+    <p class="caption">Sample only. The arrangements and total fill from whatever the couple built. The “View my cart” button links to their saved Shopify cart. For Kirunda: capturing the email as a lead can go to Flodesk, but this personalized plan + cart link is a transactional email, best sent from the app backend (Supabase) or via Shopify’s own cart/draft notification. The “Pick up where you left off” link should load the couple’s saved build by quote ID (so it works on any device); today the builder only persists to that browser’s localStorage.</p>
+  </div>
+</body>
+</html>

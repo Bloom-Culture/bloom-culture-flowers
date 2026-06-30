@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tailor Request — what Bloom Culture receives</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cabin:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Archivo:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --sage:#384d39; --sage-deep:#2b3c2c; --sage-tint:#e7ece3;
+    --cream:#f7f6f0; --cream-deep:#eeece1;
+    --rose:#aa2138; --rose-deep:#8c1a2e; --rose-tint:#f5e2e4;
+    --ink:#2c352a; --ink-soft:#5d685a; --ink-faint:#8a9384;
+    --line:#e2e0d4; --line-strong:#cfd2c4;
+    --serif:'Cabin',Georgia,serif; --sans:'Montserrat',system-ui,sans-serif; --mono:'Archivo',monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:#d9d6c9; font-family:var(--sans); color:var(--ink); -webkit-font-smoothing:antialiased; padding:30px 16px; }
+  .client{ max-width:640px; margin:0 auto; }
+
+  .meta{ background:#fff; border:1px solid var(--line); border-radius:14px 14px 0 0; padding:16px 20px; border-bottom:0; }
+  .meta .subject{ font-family:var(--serif); font-weight:600; font-size:17px; color:var(--ink); }
+  .meta .row{ display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12.5px; color:var(--ink-soft); }
+  .meta .av{ width:30px; height:30px; border-radius:50%; background:var(--rose); color:#fff; display:grid; place-items:center; font-family:var(--mono); font-weight:700; font-size:12px; flex-shrink:0; }
+  .meta b{ color:var(--ink); font-weight:600; }
+  .pill{ margin-left:auto; font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--rose); border:1px solid var(--rose); border-radius:999px; padding:3px 9px; }
+
+  .email{ background:var(--cream); border:1px solid var(--line); border-radius:0 0 14px 14px; overflow:hidden; }
+  .head{ background:var(--rose); color:#fff; padding:22px 26px; }
+  .head .tag{ font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; opacity:.85; }
+  .head h1{ font-family:var(--serif); font-weight:600; font-size:24px; line-height:1.15; margin-top:6px; }
+
+  .body{ padding:24px 26px 8px; }
+
+  .sec{ font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--rose); margin:4px 0 12px; }
+  .sec.mt{ margin-top:26px; }
+
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .cell{ background:#fff; padding:12px 14px; }
+  .cell.full{ grid-column:1 / -1; }
+  .cell .k{ font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+  .cell .v{ font-size:15px; color:var(--ink); margin-top:3px; }
+  .cell .v.em{ font-weight:600; }
+  .cell .v a{ color:var(--rose); text-decoration:none; }
+
+  .note{ background:var(--rose-tint); border-radius:12px; padding:14px 16px; font-size:14.5px; line-height:1.55; color:var(--ink); }
+  .note .qk{ font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--rose); display:block; margin-bottom:6px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tag{ background:#fff; border:1.5px solid var(--rose); color:var(--rose-deep); font-size:13px; font-weight:600; border-radius:999px; padding:7px 14px; }
+
+  /* the build */
+  .totalbar{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; background:var(--sage-deep); color:var(--cream); border-radius:12px; padding:14px 18px; margin-bottom:14px; }
+  .totalbar .l{ font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.8; }
+  .totalbar .n{ font-family:var(--serif); font-weight:600; font-size:26px; }
+
+  .arr{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+  .arr .at{ font-family:var(--serif); font-weight:600; font-size:16px; color:var(--ink); display:flex; justify-content:space-between; gap:10px; }
+  .arr .aq{ font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--rose); white-space:nowrap; }
+  .ing{ display:flex; justify-content:space-between; gap:12px; font-size:13.5px; color:var(--ink); padding:5px 0; border-bottom:1px dotted var(--line); }
+  .ing:first-of-type{ margin-top:9px; }
+  .ing:last-child{ border-bottom:0; }
+  .ing .q{ color:var(--ink-soft); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .ing .x{ color:var(--ink-faint); font-style:italic; }
+
+  .shop{ background:var(--cream-deep); border-radius:12px; padding:6px 16px; margin-top:6px; }
+  .bline{ display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+  .bline:last-child{ border-bottom:0; }
+  .bline .bn b{ font-family:var(--mono); color:var(--rose); margin-right:7px; }
+  .bline .bc{ font-variant-numeric:tabular-nums; font-weight:600; }
+
+  .foot{ background:var(--cream-deep); border-top:1px solid var(--line); text-align:center; padding:20px 24px; margin-top:22px; }
+  .foot .copyr{ font-size:11.5px; line-height:1.6; color:var(--ink-soft); max-width:480px; margin:0 auto; }
+  .foot .pricenote{ font-size:11.5px; line-height:1.6; color:var(--ink-soft); max-width:480px; margin:0 auto 12px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+  .foot .fl{ font-family:var(--serif); font-style:italic; font-size:13px; color:var(--ink-faint); margin-top:12px; }
+  .hello{ font-size:15px; line-height:1.6; color:var(--ink); margin-bottom:22px; }
+  .cta{ text-align:center; margin:0 0 24px; }
+  .cartbtn{ display:inline-block; text-decoration:none; background:var(--rose); color:#fff; font-family:var(--serif); font-weight:600; font-size:16px; border-radius:11px; padding:14px 28px; }
+  .ctasub{ font-size:12px; color:var(--ink-soft); margin-top:9px; }
+  .blinkrow{ text-decoration:none; color:var(--rose); font-weight:600; }
+  .blinkrow:hover{ text-decoration:underline; }
+
+  .caption{ max-width:640px; margin:14px auto 0; font-size:12px; color:#6b6a5e; text-align:center; line-height:1.6; }
+</style>
+</head>
+<body>
+  <div class="client">
+    <div class="meta">
+      <div class="subject">A copy of your tailor request 🌸</div>
+      <div class="row"><span class="av">BC</span><span>from <b>Bloom Culture</b> &lt;hello@bloomcultureflowers.com&gt;</span><span class="pill">Your Copy</span></div>
+      <div class="row" style="margin-left:38px;">to hannah.reyes@email.com · just now</div>
+    </div>
+
+    <div class="email">
+      <div class="head">
+        <div class="tag">Bloom Culture · Build Your Own Package</div>
+        <h1>We’ve got your request, Hannah</h1>
+      </div>
+
+      <div class="body">
+        <p class="hello">Thanks! Here’s a copy of what you sent. One of our florists will tailor your flowers and send a custom quote back to you, so keep an eye on your inbox (and peek in spam, just in case).</p>
+        <div class="sec">Your details</div>
+        <div class="grid">
+          <div class="cell"><div class="k">Name</div><div class="v em">Hannah Reyes</div></div>
+          <div class="cell"><div class="k">Email</div><div class="v"><a href="#">hannah.reyes@email.com</a></div></div>
+          <div class="cell"><div class="k">Wedding date</div><div class="v">Oct 3, 2026</div></div>
+          <div class="cell"><div class="k">Colors or vibe</div><div class="v">Blush, ivory, soft garden</div></div>
+          <div class="cell full"><div class="k">Budget range</div><div class="v em">$1,600 – $2,000</div></div>
+        </div>
+
+        <div class="sec mt">What you’d like help with</div>
+        <div class="tags">
+          <span class="tag">Adjusting quantities (more or fewer pieces)</span>
+          <span class="tag">Specific flowers or substitutions</span>
+          <span class="tag">Fitting my budget</span>
+        </div>
+
+        <div class="sec mt">In your words</div>
+        <div class="note">
+          We have a small wedding party but lots of tables, so I'd love more centerpieces and fewer bouquets. Could we swap the white roses for garden roses in blush? And is there a way to add a few bud vases for the bar and cake table?
+        </div>
+
+        <div class="sec mt">The package you built</div>
+        <div class="totalbar"><span class="l">Your running total</span><span class="n">$1,908</span></div>
+        <div class="cta"><a class="cartbtn" href="#">View my cart &#8594;</a><div class="ctasub">Your flowers are saved and waiting. Review or check out any time.</div></div>
+
+        <div class="arr">
+          <div class="at">Bridal Bouquet <span class="aq">Qty 1</span></div>
+          <div class="ing"><span>Salal / Lemon Leaf</span><span class="q">1/5 bunch</span></div>
+          <div class="ing"><span>Eucalyptus, Silver Dollar</span><span class="q">1/5 bunch</span></div>
+          <div class="ing"><span>Garden Rose, Cappuccino</span><span class="q">8 stems</span></div>
+          <div class="ing"><span>Stock, White</span><span class="q">4 stems</span></div>
+          <div class="ing"><span>Spray Rose, Blush</span><span class="q">3 stems</span></div>
+          <div class="ing"><span>Ranunculus, White <span class="x">(removed)</span></span><span class="q">—</span></div>
+        </div>
+
+        <div class="arr">
+          <div class="at">Centerpiece, Medium <span class="aq">Qty 8</span></div>
+          <div class="ing"><span>Salal / Lemon Leaf</span><span class="q">1/4 bunch</span></div>
+          <div class="ing"><span>Hydrangea, White</span><span class="q">2 stems</span></div>
+          <div class="ing"><span>Rose, White</span><span class="q">5 stems</span></div>
+          <div class="ing"><span>Carnation, Blush</span><span class="q">4 stems</span></div>
+        </div>
+
+        <div class="sec mt">Wholesale bunches needed</div>
+        <div class="shop">
+          <div class="bline"><span class="bn"><b>3</b>Salal / Lemon Leaf</span><span class="bc">$69</span></div>
+          <div class="bline"><span class="bn"><b>4</b>Rose, White</span><span class="bc">$220</span></div>
+          <div class="bline"><span class="bn"><b>2</b>Garden Rose, Cappuccino</span><span class="bc">$96</span></div>
+          <div class="bline"><span class="bn"><b>2</b>Hydrangea, White</span><span class="bc">$94</span></div>
+          <div class="bline"><span class="bn"><b>2</b>Carnation, Blush</span><span class="bc">$58</span></div>
+          <a class="bline blinkrow" href="#"><span class="bn">See your full list in cart &#8594;</span><span class="bc"></span></a>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="pricenote">This reflects our current pricing. If you come back later, your total may shift a little with the flower market. Final pricing is always confirmed at checkout.</div>
+        <div class="copyr">This flower plan and its recipes were created by Bloom Culture™ for your personal use. Please keep them for yourself, they are our original work and may not be copied, shared, or distributed. © Bloom Culture™.</div>
+        <div class="fl">Made by florists, for DIY couples. · bloomcultureflowers.com</div>
+      </div>
+    </div>
+
+    <p class="caption">Sample only — this is the <b>copy the couple receives</b> after submitting a tailor request (mirrors the florist copy, addressed to them, with copyright/no-distribute language in the footer). For Kirunda: send this to <code>payload.email</code> alongside the florist email.</p>
+  </div>
+</body>
+</html>

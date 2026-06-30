@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bloom Culture · Build Your DIY Flower Quote</title>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#384d39"/><text x="50" y="62" font-size="38" text-anchor="middle" fill="#f7f6f0" font-family="Georgia,serif">B</text></svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Montserrat:wght@400;500;600;700&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  #bcf-quote{
+    --cream:#f7f6f0; --cream-deep:#eeece1; --paper:#fff;
+    --ink:#2c352a; --ink-soft:#5d685a; --ink-faint:#98a18f;
+    --line:#e6e3d6; --line-strong:#d6d2c3;
+    --sage:#384d39; --sage-deep:#2b3c2c; --sage-tint:#e7ece3;
+    --rose:#aa2138; --rose-deep:#8c1a2e; --rose-tint:#f5e2e4;
+    --serif:'Cabin',Georgia,serif; --sans:'Montserrat',system-ui,sans-serif; --mono:'Archivo',sans-serif;
+    --shadow-sm:0 1px 2px rgba(44,53,42,.05),0 2px 8px rgba(44,53,42,.04);
+    --shadow-md:0 12px 30px rgba(44,53,42,.12);
+  }
+  #bcf-quote *{ box-sizing:border-box; margin:0; padding:0; }
+  #bcf-quote{ font-family:var(--sans); color:var(--ink); background:var(--cream-deep); -webkit-font-smoothing:antialiased;
+    width:100vw; margin-left:calc(50% - 50vw); padding-bottom:120px; scroll-margin-top:120px; }
+  #bcf-quote .wrap{ max-width:760px; margin:0 auto; padding:0 22px; }
+  #bcf-quote button{ font-family:inherit; cursor:pointer; }
+  #bcf-quote .floret{ color:var(--rose); }
+
+  /* header photo */
+  #bcf-quote .qphoto{ width:100vw; margin-left:calc(50% - 50vw); height:clamp(140px,18vw,220px); overflow:hidden; }
+  #bcf-quote .qphoto img{ width:100%; height:100%; object-fit:cover; object-position:50% 58%; display:block; }
+
+  /* step indicator */
+  #bcf-quote .steps{ display:flex; align-items:center; justify-content:center; gap:10px; padding:26px 22px 4px; flex-wrap:wrap; }
+  #bcf-quote .stepdot{ display:flex; align-items:center; gap:9px; font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); cursor:pointer; }
+  #bcf-quote .stepdot:hover .n{ border-color:var(--rose); }
+  #bcf-quote .stepdot .n{ width:24px; height:24px; border-radius:50%; border:1.5px solid var(--line-strong); display:grid; place-items:center; font-size:11px; color:var(--ink-faint); }
+  #bcf-quote .stepdot.on{ color:var(--rose); }
+  #bcf-quote .stepdot.on .n{ border-color:var(--rose); background:var(--rose); color:#fff; }
+  #bcf-quote .stepdot.done .n{ border-color:var(--sage); background:var(--sage); color:#fff; }
+  #bcf-quote .stepsep{ width:22px; height:1px; background:var(--line-strong); }
+
+  /* intro */
+  #bcf-quote .intro{ text-align:center; max-width:720px; margin:0 auto; padding:14px 22px 6px; }
+  #bcf-quote .kick{ font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--rose); margin-bottom:12px; }
+  #bcf-quote .intro h1{ font-family:var(--serif); font-weight:500; font-size:clamp(16px,4.4vw,34px); line-height:1.1; letter-spacing:-.01em; color:var(--ink); white-space:nowrap; }
+  #bcf-quote .intro h1 em{ font-style:italic; color:var(--sage); }
+  #bcf-quote .intro p{ font-size:15.5px; line-height:1.55; color:#1b1b1b; margin:12px auto 0; max-width:480px; }
+  #bcf-quote .savenote{ font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.02em; color:var(--ink-soft); margin:16px auto 4px; text-align:center; }
+  #bcf-quote .qstart{ text-align:center; margin:8px auto 2px; }
+  #bcf-quote .qshint{ font-size:12.5px; color:var(--ink-soft); position:relative; }
+  #bcf-quote .qstrig{ position:relative; color:var(--sage-deep); border-bottom:1px dashed var(--sage); cursor:pointer; font-weight:600; outline:none; }
+  #bcf-quote .qspop{ display:none; position:absolute; bottom:calc(100% + 9px); left:50%; transform:translateX(-50%); width:262px; padding:7px; background:var(--paper); border:1px solid var(--line); border-radius:12px; box-shadow:0 14px 34px rgba(0,0,0,.14); z-index:120; }
+  #bcf-quote .qstrig:hover .qspop, #bcf-quote .qstrig:focus .qspop, #bcf-quote .qstrig.on .qspop{ display:block; }
+  #bcf-quote .qspop::after{ content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:7px solid transparent; border-top-color:var(--paper); }
+  #bcf-quote .qspop::before{ content:''; position:absolute; top:100%; left:0; right:0; height:14px; }
+  #bcf-quote .qscards{ display:flex; flex-direction:column; gap:6px; }
+  #bcf-quote .qscard{ text-align:left; border:1px solid var(--line); background:transparent; border-radius:10px; padding:9px 11px; cursor:pointer; display:flex; flex-direction:column; gap:3px; transition:border-color .15s, background .15s; }
+  #bcf-quote .qscard:hover{ border-color:var(--sage); background:rgba(56,77,57,.04); }
+  #bcf-quote .qscard.on{ border-color:var(--rose); background:var(--rose-tint); }
+  #bcf-quote .qsname{ font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft); }
+  #bcf-quote .qscard:hover .qsname{ color:var(--sage-deep); }
+  #bcf-quote .qscard.on .qsname{ color:var(--rose-deep); }
+  #bcf-quote .qsdesc{ font-size:11.5px; line-height:1.4; color:var(--ink-soft); }
+
+  #bcf-quote .intro .baseNote{ max-width:660px; margin:16px auto 0; background:var(--cream-deep); border:1px solid var(--line-strong); border-radius:12px; padding:12px 16px; font-size:13px; line-height:1.55; color:var(--ink); text-align:left; }
+  #bcf-quote .intro .baseNote .bnIcon{ color:var(--rose); font-weight:700; margin-right:4px; }
+  #bcf-quote .intro .baseNote b{ color:var(--rose); }
+  #bcf-quote .howrow{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:720px; margin:18px auto 0; text-align:left; }
+  #bcf-quote .howpt{ display:flex; gap:9px; align-items:flex-start; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px 14px; box-shadow:var(--shadow-sm); }
+  #bcf-quote .howpt .hi{ flex-shrink:0; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; color:#fff; font-size:12px; font-weight:700; }
+  #bcf-quote .howpt:nth-child(1) .hi{ background:var(--rose); }
+  #bcf-quote .howpt:nth-child(2) .hi{ background:var(--rose); }
+  #bcf-quote .howpt:nth-child(3) .hi{ background:var(--rose); }
+  #bcf-quote .howpt .ht{ font-size:12.5px; line-height:1.45; color:var(--ink-soft); }
+  #bcf-quote .howpt .ht b{ color:var(--ink); font-weight:600; }
+  @media (max-width:620px){ #bcf-quote .howrow{ grid-template-columns:1fr; gap:8px; } #bcf-quote .howpt{ padding:11px 13px; } }
+
+  /* sections / accordion */
+  #bcf-quote .sections{ margin-top:24px; }
+  #bcf-quote .sec{ background:var(--paper); border:1px solid var(--line); border-radius:18px; margin-bottom:14px; overflow:visible; box-shadow:var(--shadow-sm); }
+  #bcf-quote .sechead{ width:100%; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:18px 22px; background:var(--sage-deep); border:0; text-align:left; }
+  #bcf-quote .sechead .st{ font-family:var(--serif); font-weight:600; font-size:21px; color:var(--cream); display:flex; align-items:center; gap:10px; }
+  #bcf-quote .sechead .st::before{ content:''; width:22px; height:22px; flex-shrink:0; background-image:url('https://cdn.shopify.com/s/files/1/0750/7984/4147/files/bcf_favicon.png?v=1765476178'); background-size:contain; background-repeat:no-repeat; background-position:center; }
+  #bcf-quote .sechead .smeta{ display:flex; align-items:center; gap:12px; }
+  #bcf-quote .sechead .scount{ font-family:var(--mono); font-size:11px; font-weight:700; color:var(--sage-deep); background:var(--cream); padding:5px 10px; border-radius:999px; opacity:0; transition:opacity .15s; }
+  #bcf-quote .sechead .scount.on{ opacity:1; }
+  #bcf-quote .sechead .chev{ color:var(--cream); opacity:.75; transition:transform .2s; }
+  #bcf-quote .sec.open .sechead .chev{ transform:rotate(180deg); }
+  #bcf-quote .secbody{ display:none; padding:0 22px 8px; }
+  #bcf-quote .sec.open .secbody{ display:block; }
+
+  /* item row */
+  #bcf-quote .item{ display:flex; align-items:center; gap:14px; padding:13px 0; border-top:1px solid var(--line); }
+  #bcf-quote .item:first-child{ border-top:0; }
+  #bcf-quote .item .info{ flex:1; min-width:0; }
+  #bcf-quote .item .iname{ font-size:15px; font-weight:600; color:var(--ink); line-height:1.25; }
+  #bcf-quote .item .inote{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); margin-top:3px; letter-spacing:.02em; }
+  #bcf-quote .item.on .iname{ color:var(--sage-deep); }
+  #bcf-quote .help{ display:inline-grid; place-items:center; width:15px; height:15px; border-radius:50%; border:1px solid var(--line-strong); background:var(--paper); color:var(--ink-faint); font-family:var(--mono); font-size:8.5px; font-weight:700; margin-left:7px; vertical-align:middle; position:relative; cursor:pointer; padding:0; }
+  #bcf-quote .help:hover{ border-color:var(--rose); color:var(--rose); }
+  #bcf-quote .help .pop{ display:none; position:absolute; bottom:150%; left:50%; transform:translateX(-50%); width:190px; padding:6px; background:var(--paper); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow-md); z-index:40; }
+  #bcf-quote .help .pop img{ width:100%; height:140px; object-fit:cover; border-radius:8px; display:block; }
+  #bcf-quote .help .pop::after{ content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:7px solid transparent; border-top-color:var(--paper); }
+  #bcf-quote .help:hover .pop, #bcf-quote .help.on .pop{ display:block; }
+
+  /* stepper */
+  #bcf-quote .step{ display:flex; align-items:center; border:1.5px solid var(--line-strong); border-radius:999px; overflow:hidden; flex-shrink:0; }
+  #bcf-quote .step button{ width:32px; height:32px; border:0; background:var(--paper); color:var(--sage-deep); font-size:17px; display:grid; place-items:center; transition:background .14s; }
+  #bcf-quote .step button:hover{ background:var(--sage-tint); }
+  #bcf-quote .step button:disabled{ color:var(--line-strong); cursor:not-allowed; background:var(--paper); }
+  #bcf-quote .step .qty{ width:30px; text-align:center; font-family:var(--mono); font-size:14px; font-weight:700; color:var(--ink); }
+  #bcf-quote .item.on .step{ border-color:var(--rose); }
+
+  /* palette (step 2) */
+  #bcf-quote .palette{ display:none; }
+  #bcf-quote.s2 .builder{ display:none; }
+  #bcf-quote.s2 .palette{ display:block; }
+  #bcf-quote .roleblock{ background:var(--paper); border:1px solid var(--line); border-radius:18px; margin-bottom:14px; padding:18px 22px 20px; box-shadow:var(--shadow-sm); }
+  #bcf-quote .roleblock h3{ font-family:var(--serif); font-weight:600; font-size:18px; color:var(--ink); display:flex; align-items:center; gap:10px; }
+  #bcf-quote .roleopt{ font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); background:var(--sage-tint); padding:3px 8px; border-radius:999px; }
+  #bcf-quote .roleblock .rdesc{ font-size:13px; color:var(--ink-soft); margin-top:4px; line-height:1.45; }
+  #bcf-quote .roleslots{ display:grid; gap:10px; margin-top:14px; }
+  #bcf-quote .dupnote{ margin-top:10px; font-size:12.5px; line-height:1.45; color:var(--ink-soft); background:var(--cream-deep); border:1px solid var(--line-strong); border-radius:10px; padding:9px 12px; }
+  #bcf-quote .dupnote .floret{ margin-right:3px; }
+  #bcf-quote .pslot{ display:block; }
+  @media (max-width:560px){ #bcf-quote .pslot .plabel{ margin-bottom:6px; } }
+  #bcf-quote .vpick{ display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:var(--cream); border:1.5px solid var(--line-strong); border-radius:10px; padding:8px 12px; cursor:pointer; transition:border-color .14s; }
+  #bcf-quote .vpick:hover{ border-color:var(--rose); }
+  #bcf-quote .vpick.ex{ border-style:dashed; }
+  #bcf-quote .vpick.ex .vname{ color:var(--ink-faint); font-style:italic; }
+  #bcf-quote .vthumb{ width:34px; height:34px; border-radius:8px; flex-shrink:0; background-size:cover; background-position:center; background-color:var(--sage-tint); border:1px solid var(--line); }
+  #bcf-quote .vthumb.ph{ display:grid; place-items:center; }
+  #bcf-quote .vthumb.ph::after{ content:'\2767'; color:var(--sage); font-size:15px; }
+  #bcf-quote .vname{ flex:1; min-width:0; font-size:14.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #bcf-quote .vchev{ color:var(--ink-faint); flex-shrink:0; display:flex; }
+  #bcf-quote .vgal{ position:fixed; inset:0; z-index:120; background:rgba(20,28,20,.5); display:none; align-items:flex-end; justify-content:center; }
+  #bcf-quote .vgal.on{ display:flex; }
+  #bcf-quote .vgal-card{ background:var(--cream); width:100%; max-width:640px; max-height:86vh; border-radius:20px 20px 0 0; display:flex; flex-direction:column; box-shadow:0 -10px 40px rgba(0,0,0,.3); }
+  @media (min-width:600px){ #bcf-quote .vgal{ align-items:center; } #bcf-quote .vgal-card{ border-radius:20px; } }
+  #bcf-quote .vgal-top{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px 10px; }
+  #bcf-quote .vgal-title{ font-family:var(--serif); font-weight:600; font-size:20px; color:var(--ink); }
+  #bcf-quote .vgal-x{ border:0; background:transparent; font-size:26px; line-height:1; color:var(--ink-soft); cursor:pointer; padding:0 4px; }
+  #bcfTailor .vgal-card{ background:#fff; }
+  #bcfTailor .tlr-ck{ background:var(--cream); }
+  #bcfTailor #tlrForm input, #bcfTailor #tlrForm select, #bcfTailor #tlrForm textarea{ background:var(--cream); border-color:var(--line); }
+  #bcf-quote .vgal-search{ margin:0 20px 12px; font-family:var(--sans); font-size:14.5px; border:1.5px solid var(--line-strong); border-radius:10px; padding:11px 13px; }
+  #bcf-quote .vgal-search:focus{ outline:none; border-color:var(--rose); }
+  #bcf-quote .vgal-chips{ display:flex; flex-wrap:wrap; gap:6px; padding:2px 20px 14px; }
+  #bcf-quote .vchip{ font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); background:transparent; border:1.5px solid var(--line-strong); border-radius:999px; padding:6px 13px; cursor:pointer; transition:all .12s; }
+  #bcf-quote .vchip:hover{ border-color:var(--sage); color:var(--sage-deep); }
+  #bcf-quote .vchip.on{ background:var(--sage-deep); color:var(--cream); border-color:var(--sage-deep); }
+  #bcf-quote .vgal-grid{ overflow-y:auto; padding:0 20px 22px; }
+  #bcf-quote .vgal-gh{ font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--sage); margin:16px 0 8px; }
+  #bcf-quote .vgal-row{ display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:10px; }
+  #bcf-quote .vtile{ display:flex; flex-direction:column; gap:6px; border:1.5px solid var(--line); background:var(--paper); border-radius:12px; padding:8px; cursor:pointer; text-align:center; transition:border-color .14s, transform .12s; }
+  #bcf-quote .vtile:hover{ border-color:var(--rose); transform:translateY(-2px); }
+  #bcf-quote .vtile.on{ border-color:var(--rose); box-shadow:0 0 0 2px var(--rose-tint); }
+  #bcf-quote .vtile-img{ width:100%; aspect-ratio:1/1; border-radius:8px; background-size:cover; background-position:center; background-color:var(--sage-tint); }
+  #bcf-quote .vtile-img.ph{ display:grid; place-items:center; }
+  #bcf-quote .vtile-img.ph::after{ content:'\2767'; color:var(--sage); font-size:22px; }
+  #bcf-quote .vtile-name{ font-size:12px; font-weight:600; color:var(--ink); line-height:1.2; }
+  #bcf-quote .vgal-empty{ text-align:center; color:var(--ink-faint); padding:30px; font-style:italic; }
+  #bcf-quote .vgal-foot{ padding:14px 20px 18px; border-top:1px solid var(--line); font-size:12.5px; line-height:1.5; color:var(--ink-soft); text-align:center; }
+  #bcf-quote .vgal-foot a{ color:var(--rose); font-weight:600; text-decoration:underline; text-underline-offset:2px; }
+  #bcf-quote .tlr-body{ padding:0 20px 22px; overflow-y:auto; }
+  #bcf-quote .tlr-lead{ font-size:14px; line-height:1.5; color:var(--ink-soft); margin-bottom:14px; }
+  #bcf-quote #tlrForm{ display:flex; flex-direction:column; gap:10px; }
+  #bcf-quote .tlr-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  #bcf-quote .tlr-f{ display:flex; flex-direction:column; gap:4px; }
+  #bcf-quote .tlr-f > span{ font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+  #bcf-quote .tlr-needs{ display:flex; flex-direction:column; gap:6px; }
+  #bcf-quote .tlr-needs.flash .tlr-needs-q{ color:var(--rose); }
+  #bcf-quote .tlr-needs-q{ font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:2px; }
+  #bcf-quote .tlr-ck{ display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--ink); cursor:pointer; line-height:1.3; background:var(--cream-deep); border:1.5px solid var(--line-strong); border-radius:10px; padding:11px 13px; transition:border-color .12s, background .12s; }
+  #bcf-quote .tlr-ck:hover{ border-color:var(--sage); }
+  #bcf-quote .tlr-ck:has(input:checked){ border-color:var(--rose); background:var(--rose-tint); }
+  #bcf-quote #tlrForm .tlr-ck input{ width:auto; flex-shrink:0; margin:0; accent-color:var(--rose); transform:scale(1.15); }
+  @media (max-width:520px){ #bcf-quote .tlr-grid{ grid-template-columns:1fr; } }
+  #bcf-quote #tlrForm input, #bcf-quote #tlrForm select, #bcf-quote #tlrForm textarea{ font-family:var(--sans); font-size:14.5px; border:1.5px solid var(--line-strong); border-radius:10px; padding:11px 13px; width:100%; resize:vertical; }
+  #bcf-quote #tlrForm input:focus, #bcf-quote #tlrForm select:focus, #bcf-quote #tlrForm textarea:focus{ outline:none; border-color:var(--rose); }
+  #bcf-quote .tlr-send{ border:0; border-radius:999px; background:var(--rose); color:#fff; font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:.03em; padding:14px; cursor:pointer; }
+  #bcf-quote .tlr-send:hover{ background:var(--rose-deep); }
+  #bcf-quote .tlr-sum{ margin-top:14px; }
+  #bcf-quote .tlr-sum summary{ cursor:pointer; font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); }
+  #bcf-quote .tlr-sum pre{ white-space:pre-wrap; font-family:var(--sans); font-size:12.5px; line-height:1.5; color:var(--ink); background:var(--cream-deep); border-radius:10px; padding:12px; margin-top:8px; }
+  #bcf-quote .tlr-okmsg{ text-align:center; padding:34px 22px 40px; display:flex; flex-direction:column; align-items:center; }
+  #bcf-quote .tlr-oklogo{ width:46px; height:46px; object-fit:contain; margin-bottom:18px; opacity:.92; }
+  #bcf-quote .tlr-okhead{ font-family:var(--serif); font-size:23px; color:var(--sage-deep); line-height:1.25; margin-bottom:10px; }
+  #bcf-quote .tlr-oksub{ font-family:var(--sans); font-size:14.5px; color:var(--ink-soft); line-height:1.55; max-width:380px; }
+  #bcf-quote .pslot .plabel{ font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--sage-deep); display:flex; align-items:center; gap:6px; margin-bottom:7px; white-space:nowrap; }
+  #bcf-quote select{ width:100%; font-family:var(--sans); font-size:14.5px; font-weight:500; color:var(--ink); background:var(--cream); border:1.5px solid var(--line-strong); border-radius:10px; padding:10px 34px 10px 12px; appearance:none; cursor:pointer;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235d685a' stroke-width='2.4' stroke-linecap='round'><path d='m6 9 6 6 6-6'/></svg>"); background-repeat:no-repeat; background-position:right 12px center; }
+  #bcf-quote select:focus{ outline:none; border-color:var(--rose); }
+
+  /* recipes (step 3) */
+  #bcf-quote .results{ display:none; }
+  #bcf-quote.s3 .builder, #bcf-quote.s3 .palette{ display:none; }
+  #bcf-quote.s3 .results{ display:block; }
+  #bcf-quote .rescat{ margin:24px 0 12px; }
+  #bcf-quote .rescathead{ width:100%; display:flex; align-items:center; gap:10px; background:var(--sage-deep); color:var(--cream); padding:14px 20px; border-radius:14px; border:0; cursor:pointer; }
+  #bcf-quote .rescathead::before{ content:''; width:22px; height:22px; flex-shrink:0; background-image:url('https://cdn.shopify.com/s/files/1/0750/7984/4147/files/bcf_favicon.png?v=1765476178'); background-size:contain; background-repeat:no-repeat; background-position:center; }
+  #bcf-quote .catname{ flex:1; text-align:left; font-family:var(--serif); font-weight:600; font-size:20px; color:var(--cream); }
+  #bcf-quote .catchev{ color:var(--cream); opacity:.8; transition:transform .2s; display:flex; flex-shrink:0; }
+  #bcf-quote .rescat:not(.open) .catchev{ transform:rotate(-90deg); }
+  #bcf-quote .rescatbody{ display:none; margin-top:12px; }
+  #bcf-quote .rescat.open .rescatbody{ display:block; }
+  #bcf-quote .arr{ background:var(--paper); border:1px solid var(--line); border-radius:18px; margin-bottom:14px; overflow:visible; box-shadow:var(--shadow-sm); }
+  #bcf-quote .arrhead{ width:100%; background:var(--cream-deep); color:var(--ink); padding:14px 22px; display:block; text-align:left; border:0; border-bottom:1px solid var(--line); cursor:pointer; border-radius:17px 17px 0 0; transition:background .15s; }
+  #bcf-quote .arrhead:hover{ background:var(--cream-deeper,#e6e1d2); }
+  #bcf-quote .arr:not(.open) .arrhead{ border-radius:17px; }
+  #bcf-quote .arr:not(.open) .arrhead{ border-bottom-color:transparent; }
+  #bcf-quote .arrhtop{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  #bcf-quote .arrhname{ flex:1; min-width:0; }
+  #bcf-quote .atqty{ display:inline-flex; align-items:center; gap:6px; margin-left:10px; flex-shrink:0; vertical-align:middle; background:var(--cream); border:1px solid var(--line-strong); border-radius:8px; padding:2px 5px 2px 8px; }
+  #bcf-quote .aqlabel{ font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
+  #bcf-quote .aqv{ font-family:var(--mono); font-size:14px; font-weight:700; color:var(--ink); min-width:14px; text-align:center; }
+  #bcf-quote .aqspin{ display:flex; flex-direction:column; gap:2px; }
+  #bcf-quote .aqspin button{ border:0; background:transparent; color:var(--rose); cursor:pointer; padding:0; height:10px; width:14px; display:flex; align-items:center; justify-content:center; }
+  #bcf-quote .aqspin button svg{ width:11px; height:11px; display:block; }
+  #bcf-quote .aqspin button:hover{ color:var(--rose-deep); }
+  #bcf-quote .arrchev{ display:inline-flex; align-items:center; gap:5px; flex-shrink:0; padding:5px 11px; border-radius:999px; border:1.5px solid var(--sage); background:var(--cream); color:var(--sage-deep); font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; transition:background .15s, border-color .15s, color .15s; }
+  #bcf-quote .arrchev svg{ display:block; }
+  #bcf-quote .arrchevico{ display:inline-flex; transition:transform .2s; }
+  #bcf-quote .arrchevlbl{ line-height:1; }
+  #bcf-quote .arrhead:hover .arrchev{ background:var(--sage); border-color:var(--sage); color:var(--cream); }
+  #bcf-quote .arr.open .arrchev .arrchevico{ transform:rotate(180deg); }
+  #bcf-quote .arr.open .arrchevlbl::after{ content:'Hide'; }
+  #bcf-quote .arr.open .arrchevlbl{ font-size:0; }
+  #bcf-quote .arr.open .arrchevlbl::after{ font-size:10.5px; }
+  #bcf-quote .arrstrip{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-top:10px; }
+  #bcf-quote .amini{ position:relative; transition:transform .15s ease, box-shadow .15s ease; }
+  @media (hover:hover) and (pointer:fine){
+    #bcf-quote .amini:hover{ transform:scale(2.2) translateY(-16%); z-index:5; box-shadow:0 8px 22px rgba(44,53,42,.32); border-color:var(--cream); }
+  }
+  #bcf-quote .amini{ aspect-ratio:1; min-width:0; border-radius:7px; background-size:cover; background-position:center; background-color:var(--sage-tint); border:1px solid var(--line); }
+  #bcf-quote .amini.ph{ display:grid; place-items:center; }
+  #bcf-quote .amini.ph::after{ content:'\2767'; color:var(--sage); font-size:12px; }
+  #bcf-quote .arrmore{ flex:0 0 auto; font-family:var(--mono); font-size:10px; font-weight:700; color:var(--ink-soft); margin-left:3px; }
+  #bcf-quote .arrbody{ display:none; }
+  #bcf-quote .arr.open .arrbody{ display:block; }
+  #bcf-quote .arrhead .at{ font-family:var(--serif); font-weight:600; font-size:19px; line-height:1.15; color:var(--ink); }
+  #bcf-quote .arrhead .aq{ font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; color:var(--ink-faint); margin-top:3px; text-transform:uppercase; }
+  #bcf-quote .slot{ display:flex; align-items:center; gap:8px; padding:7px 18px; border-top:1px solid var(--line); }
+  #bcf-quote .slot:first-child{ border-top:0; }
+  #bcf-quote .slot .thmb{ width:38px; height:38px; border-radius:9px; flex-shrink:0; background-size:cover; background-position:center; background-color:var(--sage-tint); border:1px solid var(--line); }
+  #bcf-quote .slot .thmb.ph{ display:grid; place-items:center; }
+  #bcf-quote .slot .thmb.ph::after{ content:'\2767'; color:var(--sage); font-size:16px; }
+  #bcf-quote .rpick{ display:flex; align-items:center; gap:9px; flex:1; min-width:0; background:var(--cream); border:1.5px solid var(--line-strong); border-radius:9px; padding:5px 9px; cursor:pointer; text-align:left; transition:border-color .15s; }
+  #bcf-quote .rpick:not([disabled]):hover{ border-color:var(--rose); }
+  #bcf-quote .rpick[disabled]{ cursor:default; opacity:.55; background:transparent; border-color:transparent; }
+  #bcf-quote .rpick:not([disabled]):hover .rname{ color:var(--rose); }
+  #bcf-quote .rchev{ color:var(--ink-faint); flex-shrink:0; display:flex; margin-left:auto; }
+  #bcf-quote .swaphint{ font-size:12.5px; font-style:italic; color:var(--ink-soft); padding:11px 22px 3px; }
+  #bcf-quote .alc-ph{ font-style:italic; color:var(--ink-faint); font-weight:500; }
+  #bcf-quote .alc-ph-row{ border-style:dashed; }
+  #bcf-quote .rinfo{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  #bcf-quote .rrole{ font-family:var(--mono); font-size:8px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); opacity:.7; }
+  #bcf-quote .rname{ font-size:14px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #bcf-quote .slot .optbadge{ font-family:var(--mono); font-size:8.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); background:var(--cream-deep); padding:3px 7px; border-radius:999px; flex-shrink:0; }
+  #bcf-quote .amt{ display:flex; align-items:center; border:1.5px solid var(--line-strong); border-radius:999px; overflow:hidden; flex-shrink:0; }
+  #bcf-quote .amt button{ width:26px; height:28px; border:0; background:var(--paper); color:var(--sage-deep); font-size:14px; display:grid; place-items:center; }
+  #bcf-quote .amt button:hover{ background:var(--sage-tint); }
+  #bcf-quote .amt button:disabled{ color:var(--line-strong); cursor:not-allowed; }
+  #bcf-quote .amt .av{ min-width:54px; text-align:center; font-family:var(--mono); font-size:11.5px; font-weight:700; color:var(--ink); padding:0 4px; }
+  #bcf-quote .slot .rm{ background:transparent; border:0; color:var(--ink-faint); font-size:16px; padding:0 2px; flex-shrink:0; }
+  #bcf-quote .slot .rm:hover{ color:var(--rose); }
+  #bcf-quote .slot.removed{ opacity:1; }
+  #bcf-quote .slot.removed .rpick{ opacity:.45; }
+  #bcf-quote .addback{ background:var(--sage-tint); border:0; color:var(--sage-deep); font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.04em; padding:7px 12px; border-radius:999px; cursor:pointer; white-space:nowrap; flex-shrink:0; }
+  #bcf-quote .addback:hover{ background:var(--sage); color:var(--cream); }
+  #bcf-quote .slot.added .rrole{ color:var(--rose); }
+  #bcf-quote .addrow{ display:flex; align-items:center; gap:12px; padding:13px 22px 6px; flex-wrap:wrap; border-top:1px solid var(--line); }
+  #bcf-quote .addflower{ border:1.5px dashed var(--line-strong); background:transparent; color:var(--sage-deep); font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:.04em; padding:9px 16px; border-radius:999px; cursor:pointer; }
+  #bcf-quote .addflower:hover{ border-color:var(--rose); color:var(--rose); }
+  #bcf-quote .adddisc{ font-size:11.5px; color:var(--ink-faint); font-style:italic; }
+  #bcf-quote .slot.removed .rname{ text-decoration:line-through; }
+  #bcf-quote .alc{ background:var(--paper); border:1px solid var(--line); border-radius:18px; margin-top:14px; padding:18px 22px 8px; box-shadow:var(--shadow-sm); }
+  #bcf-quote .alchead{ font-family:var(--serif); font-weight:600; font-size:19px; color:var(--ink); }
+  #bcf-quote .alchead em{ font-style:italic; color:var(--rose); }
+  #bcf-quote .alcsub{ font-size:13px; color:var(--ink-soft); line-height:1.45; margin:4px 0 4px; }
+
+  /* master list */
+  #bcf-quote .totalcard{ background:var(--sage-deep); color:var(--cream); border-radius:18px; padding:22px 24px; margin-top:8px; }
+  #bcf-quote .tcrow{ display:flex; align-items:baseline; justify-content:space-between; gap:14px; }
+  #bcf-quote .tclab{ font-family:var(--mono); font-size:12.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--cream); }
+  #bcf-quote .tcnum{ font-family:var(--serif); font-weight:600; font-size:40px; line-height:1; color:var(--cream); }
+  #bcf-quote .tcmeta{ font-family:var(--mono); font-size:13px; letter-spacing:.04em; color:var(--cream); opacity:.7; margin-top:6px; }
+  #bcf-quote .tcmeta .tcship{ display:block; margin-top:6px; opacity:1; font-weight:700; letter-spacing:.02em; }
+  #bcf-quote .tcmeta .tcship .floret{ margin-right:3px; }
+  #bcf-quote .tcnote{ font-size:14px; line-height:1.55; color:var(--cream); opacity:.85; margin-top:14px; border-top:1px solid rgba(247,246,240,.18); padding-top:12px; }
+  #bcf-quote .tcnote b{ color:var(--cream); }
+  #bcf-quote .tccart{ width:100%; border:0; border-radius:12px; background:var(--cream); color:var(--ink); font-family:var(--serif); font-weight:600; font-size:19px; padding:16px; cursor:pointer; transition:background .15s, transform .1s; }
+  #bcf-quote .tccart:hover{ background:#fff; transform:translateY(-1px); }
+  #bcf-quote .tccart:active{ transform:translateY(0); }
+  #bcf-quote .tcactions{ display:flex; flex-direction:column; gap:9px; margin-top:16px; }
+  #bcf-quote .tcsec{ width:100%; border:1.5px solid rgba(247,246,240,.45); border-radius:12px; background:transparent; color:var(--cream); font-family:var(--serif); font-weight:600; font-size:17px; padding:14px; cursor:pointer; transition:background .15s, border-color .15s; }
+  #bcf-quote .tcsec:hover{ background:rgba(247,246,240,.12); border-color:var(--cream); }
+  #bcf-quote .tcsec.on{ background:rgba(247,246,240,.16); border-color:var(--cream); box-shadow:inset 3px 0 0 var(--cream); }
+  #bcf-quote .tcsec.on::before{ content:'\2713  '; font-weight:700; }
+  #bcf-quote .tcemail:empty{ display:none; }
+  #bcf-quote .tcemail{ margin-top:12px; }
+  #bcf-quote .tcemail .slform{ display:flex; gap:8px; }
+  #bcf-quote .tcemail .slform input{ flex:1; min-width:0; font-family:var(--sans); font-size:14px; border:0; border-radius:10px; padding:12px; }
+  #bcf-quote .tcemail .slform input:focus{ outline:2px solid var(--rose); }
+  #bcf-quote .tcemail .slform button{ border:0; border-radius:10px; background:var(--rose); color:#fff; font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.03em; padding:12px 16px; white-space:nowrap; cursor:pointer; }
+  #bcf-quote .tcemail .slform button:hover{ background:var(--rose-deep); }
+  #bcf-quote .tcemail .slok{ display:block; font-size:13.5px; color:var(--cream); font-weight:600; padding-top:4px; }
+  #bcf-quote .tcemail .slnote{ display:block; font-size:13px; color:var(--cream); opacity:.85; padding-top:4px; line-height:1.5; }
+  @media (max-width:560px){ #bcf-quote .tcemail .slform{ flex-direction:column; } }
+  #bcf-quote .slform{ display:flex; gap:8px; }
+  #bcf-quote .slform input{ min-width:0; width:200px; font-family:var(--sans); font-size:14px; border:1.5px solid var(--line-strong); border-radius:10px; padding:10px 12px; }
+  #bcf-quote .slform input:focus{ outline:none; border-color:var(--rose); }
+  #bcf-quote .slform button{ border:0; border-radius:10px; background:var(--rose); color:#fff; font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.03em; padding:10px 16px; white-space:nowrap; cursor:pointer; }
+  #bcf-quote .slform button:hover{ background:var(--rose-deep); }
+  @media (max-width:560px){ #bcf-quote .slform{ flex-direction:column; width:100%; } #bcf-quote .slform input{ width:100%; } }
+  #bcf-quote .slform.slstack{ flex-direction:column; align-items:stretch; }
+  #bcf-quote .slform.slstack input{ width:100%; }
+  #bcf-quote .slerr{ display:none; font-size:12.5px; line-height:1.4; color:#f6d4cf; font-weight:600; }
+  #bcf-quote .slerr:not(:empty){ display:block; }
+  #bcf-quote .tlr-err{ display:none; font-size:13px; line-height:1.4; color:var(--rose-deep); font-weight:600; }
+  #bcf-quote .tlr-err:not(:empty){ display:block; }
+  #bcf-quote .bline{ display:flex; align-items:baseline; justify-content:space-between; gap:14px; padding:8px 0; border-top:1px solid rgba(56,77,57,.14); }
+  #bcf-quote .bline:first-of-type{ border-top:0; }
+  #bcf-quote .bline .bn{ font-size:14px; color:var(--ink); }
+  #bcf-quote .bline .bn b{ font-family:var(--mono); font-size:12px; color:var(--sage-deep); margin-right:8px; }
+  #bcf-quote .bline .bc{ font-family:var(--mono); font-size:12.5px; font-weight:700; color:var(--sage-deep); white-space:nowrap; }
+
+  /* sticky bar */
+  #bcf-quote .bar{ position:fixed; left:0; right:0; bottom:0; z-index:50; background:var(--sage-deep); color:var(--cream); box-shadow:0 -8px 24px rgba(44,53,42,.18); }
+  #bcf-quote .bar .bin{ max-width:760px; margin:0 auto; padding:13px 22px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  #bcf-quote .bar .blabel{ font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(247,246,240,.62); }
+  #bcf-quote .bar .bnum{ font-family:var(--serif); font-weight:600; font-size:clamp(20px,3.2vw,26px); line-height:1; margin-top:3px; }
+  #bcf-quote .bar .bnum .z{ color:rgba(247,246,240,.5); font-size:15px; font-style:italic; font-weight:500; }
+  #bcf-quote .bar .bbtns{ display:flex; align-items:center; gap:8px; }
+  #bcf-quote .bar .back{ border:1.5px solid rgba(247,246,240,.28); background:transparent; color:var(--cream); border-radius:999px; padding:13px 18px; font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.03em; }
+  #bcf-quote .bar .back:hover{ background:rgba(247,246,240,.1); }
+  #bcf-quote .bar .cta{ border:0; border-radius:999px; background:var(--rose); color:#fff; padding:14px 24px; font-family:var(--mono); font-weight:700; font-size:12.5px; letter-spacing:.03em; white-space:nowrap; transition:background .15s, transform .14s; }
+  #bcf-quote .bar .cta:hover{ background:var(--rose-deep); transform:translateY(-1px); }
+  #bcf-quote .bar .cta:disabled{ background:rgba(247,246,240,.18); color:rgba(247,246,240,.5); cursor:not-allowed; transform:none; }
+
+  /* final CTAs */
+  #bcf-quote .disc{ font-size:12.5px; line-height:1.6; color:var(--ink-soft); text-align:center; margin:18px auto 0; max-width:580px; }
+  #bcf-quote .ctas{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:22px; }
+  #bcf-quote .cta2{ display:flex; flex-direction:column; gap:5px; text-decoration:none; border-radius:16px; padding:20px; border:1.5px solid var(--line); background:var(--paper); box-shadow:var(--shadow-sm); transition:transform .16s, box-shadow .16s, border-color .16s; }
+  #bcf-quote .cta2:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:var(--rose); }
+  #bcf-quote .cta2.dark{ background:var(--sage-deep); border-color:var(--sage-deep); }
+  #bcf-quote .cta2 .tg{ font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--rose); }
+  #bcf-quote .cta2.dark .tg{ color:var(--cream); opacity:.7; }
+  #bcf-quote .cta2 .tt{ font-family:var(--serif); font-weight:600; font-size:18px; color:var(--ink); }
+  #bcf-quote .cta2.dark .tt{ color:var(--cream); }
+  #bcf-quote .cta2 .tdd{ font-size:13px; color:var(--ink-soft); line-height:1.4; }
+  #bcf-quote .cta2.dark .tdd{ color:rgba(247,246,240,.8); }
+  #bcf-quote .endfoot{ display:flex; align-items:center; justify-content:center; gap:22px; margin-top:22px; flex-wrap:wrap; }  #bcf-quote .endfoot button{ background:transparent; border:0; font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); }
+  #bcf-quote .endfoot button:hover{ color:var(--rose); }
+
+  #bcf-quote .emptyq{ text-align:center; padding:50px 22px; }
+  #bcf-quote .emptyq p{ font-family:var(--serif); font-style:italic; font-size:19px; color:var(--ink-soft); margin-top:12px; }
+
+  @media (max-width:560px){
+    #bcf-quote .ctas{ grid-template-columns:1fr; }
+    #bcf-quote .bar .back{ padding:13px 14px; }
+    #bcf-quote .stepdot .lbl{ display:none; }
+  }
+  @media (max-width:480px){
+    #bcf-quote .wrap{ padding:0 14px; }
+    #bcf-quote .steps{ padding:18px 14px 4px; gap:7px; }
+    /* let the long step-1 headline wrap instead of overflowing */
+    #bcf-quote .intro h1{ white-space:normal; font-size:clamp(21px,7vw,30px); }
+    #bcf-quote .intro{ padding:12px 14px 6px; }
+    #bcf-quote .intro p{ font-size:14.5px; }
+    /* section + recipe cards: reclaim side padding */
+    #bcf-quote .sechead{ padding:15px 16px; }
+    #bcf-quote .sechead .st{ font-size:18px; }
+    #bcf-quote .secbody{ padding:0 16px 8px; }
+    #bcf-quote .roleblock{ padding:16px 16px 18px; }
+    #bcf-quote .arrhead{ padding:13px 16px; }
+    #bcf-quote .slot{ padding:8px 16px; gap:7px; }
+    #bcf-quote .rescathead{ padding:13px 16px; }
+    /* recipe row: shrink the amount stepper so the row fits */
+    #bcf-quote .amt .av{ min-width:46px; font-size:11px; }
+    #bcf-quote .slot .thmb{ width:34px; height:34px; }
+    /* qty pill: keep it compact next to the name */
+    #bcf-quote .atqty{ margin-left:7px; padding:2px 4px; }
+    /* sticky bar: tighten so back + total + next all fit */
+    #bcf-quote .bar .bin{ padding:11px 14px; gap:9px; }
+    #bcf-quote .bar .cta{ padding:12px 16px; }
+    #bcf-quote .bar .back{ padding:12px 12px; }
+    /* total card + tailor modal breathing room */
+    #bcf-quote .totalcard{ padding:18px 16px; }
+    #bcf-quote .tcnum{ font-size:34px; }
+    /* extra-flowers + add rows wrap cleanly */
+    #bcf-quote .addrow{ padding:11px 16px 6px; }
+    /* example "?" preview: center it so it never clips a screen edge */
+    #bcf-quote .help .pop{ position:fixed; left:50%; top:50%; bottom:auto; transform:translate(-50%,-50%); width:min(300px,86vw); z-index:130; }
+    #bcf-quote .help .pop img{ height:200px; }
+    #bcf-quote .help .pop::after{ display:none; }
+    /* declutter the busiest optional recipe row */
+    #bcf-quote .slot .optbadge{ display:none; }
+  }
+  @media print{ #bcf-quote .bar, #bcf-quote .ctas, #bcf-quote .endfoot, #bcf-quote .qphoto, #bcf-quote .steps{ display:none !important; } }
+</style>
+</head>
+<body>
+<div id="bcf-quote">
+  <div class="qphoto"><img src="https://cdn.shopify.com/s/files/1/0750/7984/4147/files/Bloom_Culture_LLAYTON-25.webp?v=1781888719" alt="Bloom Culture wedding flowers" /></div>
+
+  <div class="steps" id="stepbar">
+    <div class="stepdot on" data-step="1"><span class="n">1</span><span class="lbl">Pick arrangements</span></div>
+    <div class="stepsep"></div>
+    <div class="stepdot" data-step="2"><span class="n">2</span><span class="lbl">Your flowers</span></div>
+    <div class="stepsep"></div>
+    <div class="stepdot" data-step="3"><span class="n">3</span><span class="lbl">Your recipes</span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="builder">
+    <div class="intro">
+      <h1>Let's build your <em>wedding flower package</em></h1>
+      <p>Pick what you need, choose your colors and flowers, and get your recipes and total in one place.</p>
+    </div>
+    <div class="wrap">
+      <div class="qstart">
+        <span class="qshint">New to this?
+          <span class="qstrig" tabindex="0" role="button" aria-label="See typical setups">Start with a typical setup
+            <span class="qspop">
+              <span class="qscards">
+                <button class="qscard" data-preset="small">
+                  <span class="qsname">Small</span>
+                  <span class="qsdesc">An intimate day &mdash; bouquets, a few boutonni&egrave;res, and four tables.</span>
+                </button>
+                <button class="qscard" data-preset="medium">
+                  <span class="qsname">Medium</span>
+                  <span class="qsdesc">A classic wedding party with corsages and eight reception tables.</span>
+                </button>
+                <button class="qscard" data-preset="large">
+                  <span class="qsname">Large</span>
+                  <span class="qsdesc">A full party, ceremony statements, and twelve tables.</span>
+                </button>
+              </span>
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class="savenote"><span class="floret">&#10047;</span> Saves as you go, come back any time.</div>
+      <div class="sections" id="sections"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="palette">
+    <div class="intro">
+      <div class="kick"><span class="floret">&#10047;</span> Step 2</div>
+      <h1>Choose your <em>flowers</em></h1>
+      <p>Pick your palette once and it flows into every arrangement. You can fine-tune each one next.</p>
+    </div>
+    <div class="wrap"><div id="paletteMount"></div></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="results">
+    <div class="intro">
+      <div class="kick"><span class="floret">&#10047;</span> Step 3</div>
+      <h1>Your recipes &amp; quote</h1>
+      <p>Your recipes are done for you.<br />Tweak anything you want, or leave them just as they are.</p>
+      <div class="howrow">
+        <div class="howpt"><span class="hi">&#10047;</span><span class="ht">Click any arrangement to swap or add flowers</span></div>
+        <div class="howpt"><span class="hi">&#10003;</span><span class="ht">Amounts won’t drop below our florist-tested recipes, so you’ll always have enough</span></div>
+        <div class="howpt"><span class="hi">&#9998;</span><span class="ht">Need something custom? <b>Have us tailor it</b> below</span></div>
+      </div>
+    </div>
+    <div class="wrap"><div id="resultsMount"></div></div>
+  </div>
+
+  <!-- STICKY BAR -->
+  <div class="bar">
+    <div class="bin">
+      <div>
+        <div class="blabel" id="barLabel">Your arrangements</div>
+        <div class="bnum" id="barNum"><span class="z">Add items to begin</span></div>
+      </div>
+      <div class="bbtns">
+        <button class="back" id="backBtn">&#8592; Back</button>
+        <button class="cta" id="nextBtn" disabled>Next: choose flowers &#8594;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="quote-recipes.js"></script>
+<script>
+(function(){
+  var root = document.getElementById('bcf-quote');
+  var PRODUCTS = window.BCF_PRODUCTS, CATS = window.BCF_CATEGORIES;
+
+  var CUSTOM_URL = 'https://bloomcultureflowers.com/pages/custom-floral-design';
+
+  var ROLE_NAME = { greenery:'Greenery', line:'Line flower', focal:'Focal flower', large:'Statement flower', spray:'Spray flower', detail:'Detail flower', filler:'Filler flower' };
+  var ROLE_DESC = {
+    greenery:'The foliage is the base of the arrangements.',
+    line:'Long stems with blooms along the stem, add height or length, and create movement.',
+    focal:'Your star blooms, the eye lands here.',
+    large:'Big statement blooms like hydrangea, used in the larger arrangements you selected.',
+    spray:'Multi-bloom stems that fill and soften.',
+    detail:'Special accent blooms for texture.',
+    filler:'Airy little blooms that tie it together and fill in space. '
+  };
+  var ROLE_ORDER = ['greenery','focal','spray','line','detail','filler','large'];
+
+  /* state */
+  var step = 1;
+  var maxReached = 1;
+  var byId = {};
+  CATS.forEach(function(c){ c.pieces.forEach(function(p){ p.qty=0; byId[p.id]=p; }); });
+  var palette = {};   // role -> [flowerName per slot index]
+  var touched = {};   // role|idx -> true once the couple actively picks (clears the EX state)
+  var amounts = {};   // pieceId -> [amount per slot]
+  var removed = {};   // pieceId -> { slotIndex:true }
+  var overrides = {}; // pieceId -> { slotIndex:flowerName }  (per-piece flower swap)
+  var openArrs = {};  // pieceId -> true when its recipe card is expanded on step 3
+  var closedCats = {}; // categoryId -> true when its section is collapsed on step 3 (open by default)
+  var additions = {}; // pieceId -> [{name, amt, unit}]  (extra flowers the couple adds to a recipe)
+  var alacarte = []; // [{name, bunches}]  (whole wholesale bunches added to the order, not tied to a recipe)
+  var leadEmail = null; // soft lead-capture email (optional "email me my plan")
+  var leadName = null;  // soft lead-capture full name (paired with leadEmail)
+
+  function prodsByRole(role){ return PRODUCTS.filter(function(p){ return p.role===role; }); }
+  function isOpt(sl){ return !!sl[3] || sl[0]==='filler'; } // filler is always optional/removable
+  var TYPE_FIX={'Carnations':'Carnation','Mini Carnations':'Mini Carnation','Peonies':'Peony','Snapdragons':'Snapdragon','Football Mums':'Football Mum','Vintage Carnations':'Carnation','Sunflowers':'Sunflower','Waxflower':'Wax Flower'};
+  function splitName(name){
+    var type, color, m=name.match(/^(.*?)\s*-\s*(.*)$/);
+    if(m){ type=m[1].trim(); color=m[2].trim(); }
+    else { var pm=name.match(/^(.*?)\s*\(([^)]+)\)\s*$/); if(pm){ type=pm[1].trim(); color=pm[2].trim(); } else { type=name.trim(); color=''; } }
+    if(TYPE_FIX[type]) type=TYPE_FIX[type];
+    return {type:type, color:color};
+  }
+  function typesInRole(role){ var seen=[],map={}; prodsByRole(role).forEach(function(p){ var t=splitName(p.name).type; if(!map[t]){ map[t]=1; seen.push(t); } }); return seen; }
+  function colorsForType(role,type){ return prodsByRole(role).filter(function(p){ return splitName(p.name).type===type; }); }
+  function colorNeutral(role,type){ var list=colorsForType(role,type); if(!list.length) return ''; for(var i=0;i<list.length;i++){ if(/\bwhite\b/i.test(list[i].name)) return list[i].name; } for(var j=0;j<list.length;j++){ if(/cream|ivory/i.test(list[j].name)) return list[j].name; } return list[0].name; }
+  function pieceImg(id){ return (window.BCF_PIECE_PHOTOS||{})[id]; }
+  function helpBtn(id){
+    var url=pieceImg(id);
+    if(!url) return '';
+    return '<button class="help" data-help="'+id+'" aria-label="See an example">?<span class="pop"><img src="'+url+'" alt="" /></span></button>';
+  }
+  function prod(name){ return PRODUCTS.find(function(p){ return p.name===name; }); }
+  function money(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+  function roleOf(name){ var pr=prod(name); return pr?pr.role:''; }
+  function thumb(name){
+    var url=(window.BCF_PHOTOS||{})[name];
+    if(url) return '<span class="thmb" style="background-image:url(\''+url+'\')"></span>';
+    return '<span class="thmb ph"></span>';
+  }
+  function vthumb(name){
+    var url=(window.BCF_PHOTOS||{})[name];
+    if(url) return '<span class="vthumb" style="background-image:url(\''+url+'\')"></span>';
+    return '<span class="vthumb ph"></span>';
+  }
+  function frac(v){
+    var opts=[[1,'1'],[0.75,'3/4'],[2/3,'2/3'],[0.5,'1/2'],[1/3,'1/3'],[0.25,'1/4'],[1/5,'1/5'],[1/6,'1/6'],[1/7,'1/7']];
+    for(var i=0;i<opts.length;i++){ if(Math.abs(opts[i][0]-v)<0.02) return opts[i][1]; }
+    return (Math.round(v*100)/100)+'';
+  }
+
+  /* ---------------- progress persistence (so a reload keeps your place) ---------------- */
+  var SKEY='bcf_quote_state_v1';
+  function saveState(){
+    try{
+      var qty={}; CATS.forEach(function(c){ c.pieces.forEach(function(p){ if(p.qty>0) qty[p.id]=p.qty; }); });
+      localStorage.setItem(SKEY, JSON.stringify({ step:step, qty:qty, palette:palette, touched:touched, amounts:amounts, removed:removed, overrides:overrides, additions:additions, alacarte:alacarte, leadEmail:leadEmail, leadName:leadName }));
+    }catch(e){}
+  }
+  function loadState(){
+    try{
+      var raw=localStorage.getItem(SKEY); if(!raw) return null;
+      var s=JSON.parse(raw); if(!s||!s.qty) return null;
+      CATS.forEach(function(c){ c.pieces.forEach(function(p){ p.qty=s.qty[p.id]||0; }); });
+      palette=s.palette||{}; touched=s.touched||{}; amounts=s.amounts||{}; removed=s.removed||{}; overrides=s.overrides||{}; additions=s.additions||{}; alacarte=s.alacarte||[]; leadEmail=s.leadEmail||null; leadName=s.leadName||null;
+      return s;
+    }catch(e){ return null; }
+  }
+  function refreshCounts(){
+    CATS.forEach(function(c){ var n=0; c.pieces.forEach(function(x){ n+=x.qty; }); var el=root.querySelector('[data-seccount="'+c.id+'"]'); if(el){ el.textContent=n?n+' selected':''; el.classList.toggle('on',n>0); } });
+  }
+
+  /* ---------------- STEP 1 ---------------- */
+  function renderSections(){
+    var host=document.getElementById('sections');
+    host.innerHTML = CATS.map(function(cat,ci){
+      if(!cat.pieces.length) return '';
+      var rows = cat.pieces.map(function(p){
+        var note = p.note ? '<div class="inote">'+p.note+'</div>' : (p.greeneryOnly?'<div class="inote">Greenery only</div>':'');
+        return '<div class="item'+(p.qty>0?' on':'')+'" data-id="'+p.id+'">'+
+          '<div class="info"><div class="iname">'+p.name+helpBtn(p.id)+'</div>'+note+'</div>'+
+          '<div class="step">'+
+            '<button data-dec="'+p.id+'" aria-label="Remove one"'+(p.qty>0?'':' disabled')+'>&#8722;</button>'+
+            '<span class="qty" data-qty="'+p.id+'">'+p.qty+'</span>'+
+            '<button data-inc="'+p.id+'" aria-label="Add one">+</button>'+
+          '</div></div>';
+      }).join('');
+      return '<div class="sec'+(ci===0?' open':'')+'">'+
+        '<button class="sechead" data-toggle="'+cat.id+'"><span class="st">'+cat.name+'</span>'+
+        '<span class="smeta"><span class="scount" data-seccount="'+cat.id+'"></span>'+
+        '<span class="chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></span></button>'+
+        '<div class="secbody">'+rows+'</div></div>';
+    }).join('');
+
+    host.querySelectorAll('[data-toggle]').forEach(function(b){ b.addEventListener('click',function(){ b.closest('.sec').classList.toggle('open'); }); });
+    host.querySelectorAll('[data-inc]').forEach(function(b){ b.addEventListener('click',function(){ chQty(b.getAttribute('data-inc'),1); }); });
+    host.querySelectorAll('[data-dec]').forEach(function(b){ b.addEventListener('click',function(){ chQty(b.getAttribute('data-dec'),-1); }); });
+    host.querySelectorAll('[data-help]').forEach(function(b){ b.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); var open=b.classList.contains('on'); host.querySelectorAll('.help.on').forEach(function(x){ x.classList.remove('on'); }); if(!open) b.classList.add('on'); }); });
+    refreshCounts();
+  }
+  function chQty(id,delta){
+    var p=byId[id]; p.qty=Math.max(0,p.qty+delta);
+    var row=root.querySelector('.item[data-id="'+id+'"]');
+    row.classList.toggle('on',p.qty>0);
+    row.querySelector('[data-qty="'+id+'"]').textContent=p.qty;
+    row.querySelector('[data-dec="'+id+'"]').disabled=p.qty===0;
+    root.querySelectorAll('.qscard.on').forEach(function(b){ b.classList.remove('on'); });
+    refreshCounts();
+    updateBar();
+    saveState();
+  }
+  function selectedPieces(){ var a=[]; CATS.forEach(function(c){ c.pieces.forEach(function(p){ if(p.qty>0) a.push(p); }); }); return a; }
+
+  /* ---------------- STEP 2: palette ---------------- */
+  function rolesNeeded(){
+    // role -> max slot count across selected pieces (ignoring removed not yet known)
+    var max={};
+    selectedPieces().forEach(function(p){
+      var per={};
+      p.recipe.forEach(function(sl){ per[sl[0]]=(per[sl[0]]||0)+1; });
+      for(var r in per){ max[r]=Math.max(max[r]||0, per[r]); }
+    });
+    return max;
+  }
+  function buildDefaults(){
+    var max=rolesNeeded();
+    var EX_DEFAULTS={ greenery:['Eucalyptus','Salal / Lemon Leaf','Leather Leaf'], line:['Stock','Delphinium'], large:['Hydrangea'], focal:['Rose','Carnation'], spray:['Spray Rose','Mini Carnation'], detail:['Ranunculus'], filler:["Baby's Breath"] };
+    ROLE_ORDER.forEach(function(role){
+      if(!max[role]) return;
+      palette[role]=palette[role]||[];
+      // seed defaults from recipes: collect default flowers seen per index
+      var seen=[];
+      selectedPieces().forEach(function(p){
+        var idx=0;
+        p.recipe.forEach(function(sl){
+          if(sl[0]!==role) return;
+          if(sl[4] && !seen[idx]) seen[idx]=sl[4];
+          idx++;
+        });
+      });
+      for(var i=0;i<max[role];i++){
+        var ekey=role+'|'+i;
+        if(touched[ekey]){ if(!palette[role][i]) palette[role][i]=neutralFor(role); continue; }
+        var bare=(EX_DEFAULTS[role] && EX_DEFAULTS[role][i]) || seen[i];
+        palette[role][i] = resolveDefault(role, bare) || resolveDefault(role, seen[i]) || neutralFor(role);
+      }
+      palette[role].length=max[role];
+    });
+  }
+  function neutralFor(role){
+    var list=prodsByRole(role); if(!list.length) return '';
+    function find(re){ for(var i=0;i<list.length;i++){ if(re.test(list[i].name)) return list[i].name; } return null; }
+    if(role==='greenery') return find(/salal\/lemon|silver dollar/i) || find(/eucalyptus/i) || list[0].name;
+    if(role==='filler') return find(/wax flower .*white|baby's breath/i) || find(/white|cream|ivory/i) || list[0].name;
+    if(role==='focal') return find(/^rose - white/i) || find(/rose - cream|rose - vendela/i) || find(/\bwhite\b/i) || list[0].name;
+    if(role==='line') return find(/stock - white|snapdragon.*white/i) || find(/\bwhite\b/i) || list[0].name;
+    return find(/\bwhite\b/i) || find(/cream|ivory/i) || list[0].name;
+  }
+  function norm(s){ return (s||'').toLowerCase().replace(/\s*\/\s*/g,'/').replace(/\s+/g,' ').trim(); }
+  function resolveDefault(role, bare){
+    if(!bare) return null;
+    if(prod(bare)) return bare;
+    var list=prodsByRole(role); var nb=norm(bare);
+    var matches=list.filter(function(o){ return norm(splitName(o.name).type)===nb; });
+    if(!matches.length) matches=list.filter(function(o){ return norm(o.name).indexOf(nb)>=0; });
+    if(!matches.length) return null;
+    for(var i=0;i<matches.length;i++){ if(/\bwhite\b/i.test(matches[i].name)) return matches[i].name; }
+    for(var j=0;j<matches.length;j++){ if(/cream|ivory/i.test(matches[j].name)) return matches[j].name; }
+    return matches[0].name;
+  }
+  function renderPalette(){
+    buildDefaults();
+    var max=rolesNeeded();
+    var mount=document.getElementById('paletteMount');
+    mount.innerHTML = ROLE_ORDER.filter(function(r){ return max[r]; }).map(function(role){
+      var opts=prodsByRole(role);
+      var slots='';
+      for(var i=0;i<max[role];i++){
+        var cur=palette[role][i]; var ct=splitName(cur);
+        var key=role+'|'+i;
+        var isEx = !touched[key];
+        var dispName = isEx ? ('ex. '+ct.type) : (ct.type + (ct.color?' \u00b7 '+ct.color : ''));
+        slots+='<div class="pslot'+(isEx?' ex':'')+'"><span class="plabel">'+ROLE_NAME[role]+' '+(i+1)+'</span>'+
+          '<button type="button" class="vpick'+(isEx?' ex':'')+'" data-role="'+role+'" data-idx="'+i+'">'+
+            vthumb(cur)+'<span class="vname">'+dispName+'</span>'+
+            '<span class="vchev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button></div>';
+      }
+      var dupNames={}, hasDup=false;
+      for(var di=0; di<max[role]; di++){ var dn=norm(palette[role][di]); if(!dn) continue; if(dupNames[dn]) hasDup=true; dupNames[dn]=1; }
+      var dupNote = hasDup ? '<div class="dupnote"><span class="floret">&#10047;</span> Picked the same '+ROLE_NAME[role].toLowerCase()+' twice? Lovely \u2014 we\u2019ll simply combine it into one accurate amount.</div>' : '';
+      return '<div class="roleblock"><h3><span class="floret">&#10047;</span> '+ROLE_NAME[role]+(max[role]>1 && role!=='greenery' ?'s':'')+(role==='filler'?'<span class="roleopt">optional</span>':'')+'</h3>'+
+        '<div class="rdesc">'+ROLE_DESC[role]+'</div><div class="roleslots">'+slots+'</div>'+dupNote+'</div>';
+    }).join('');
+    mount.querySelectorAll('.vpick').forEach(function(b){
+      b.addEventListener('click',function(){ openGallery(b.getAttribute('data-role'), +b.getAttribute('data-idx')); });
+    });
+    updatePaletteBar();
+  }
+  function paletteRemaining(){
+    var max=rolesNeeded(), rem=0;
+    ROLE_ORDER.forEach(function(role){ if(!max[role]||role==='filler') return; for(var i=0;i<max[role];i++){ if(!touched[role+'|'+i]) rem++; } });
+    return rem;
+  }
+  function updatePaletteBar(){
+    if(step!==2) return;
+    var rem=paletteRemaining();
+    var next=document.getElementById('nextBtn'), lbl=document.getElementById('barLabel'), num=document.getElementById('barNum');
+    if(rem>0){ num.innerHTML='<span class="z">Pick your flowers</span>'; lbl.textContent=rem+(rem===1?' flower left to choose':' flowers left to choose'); next.disabled=true; }
+    else { num.innerHTML='<span class="z">Flowers picked</span>'; lbl.textContent='Step 2 of 3'; next.disabled=false; }
+  }
+  var galTarget=null;
+  var galFilter='all'; // type filter for the add / à la carte gallery
+  function ensureGal(){
+    var g=document.getElementById('bcfVgal');
+    if(g) return g;
+    g=document.createElement('div'); g.className='vgal'; g.id='bcfVgal';
+    g.innerHTML='<div class="vgal-card">'+
+      '<div class="vgal-top"><span class="vgal-title" id="vgalTitle"></span><button type="button" class="vgal-x" id="vgalX" aria-label="Close">&times;</button></div>'+
+      '<input type="text" class="vgal-search" id="vgalSearch" placeholder="Search by name\u2026" />'+
+      '<div class="vgal-chips" id="vgalChips"></div>'+
+      '<div class="vgal-grid" id="vgalGrid"></div>'+
+      '<div class="vgal-foot">Don’t see the bloom you were looking for? Some specialty flowers are seasonal or available only through a <a href="'+CUSTOM_URL+'" target="_blank" rel="noopener">custom design</a>.</div></div>';
+    root.appendChild(g);
+    g.addEventListener('click',function(e){ if(e.target===g) closeGal(); });
+    document.getElementById('vgalX').addEventListener('click',closeGal);
+    document.getElementById('vgalSearch').addEventListener('input',function(){ renderGalTiles(this.value); });
+    return g;
+  }
+  function openGallery(role,idx,piece){
+    galTarget={role:role, idx:idx, piece:piece||null};
+    ensureGal();
+    document.getElementById('vgalTitle').textContent='Choose your '+ROLE_NAME[role].toLowerCase();
+    document.getElementById('vgalSearch').value='';
+    renderGalTiles('');
+    showGal();
+  }
+  function showGal(){ var g=document.getElementById('bcfVgal'); g.classList.add('on'); var grid=document.getElementById('vgalGrid'); if(grid) grid.scrollTop=0; }
+  function openGalleryAdd(piece){ galTarget={piece:piece, add:true}; galFilter='all'; ensureGal(); document.getElementById('vgalTitle').textContent='Add a flower'; document.getElementById('vgalSearch').value=''; renderGalTiles(''); showGal(); }
+  function openGalleryChangeAdd(piece,ai){ galTarget={piece:piece, addIndex:ai}; ensureGal(); document.getElementById('vgalTitle').textContent='Swap this flower'; document.getElementById('vgalSearch').value=''; renderGalTiles(''); showGal(); }
+  function openGalleryAlc(){ galTarget={alacarte:true}; galFilter='all'; ensureGal(); document.getElementById('vgalTitle').textContent='Add an extra flower'; document.getElementById('vgalSearch').value=''; renderGalTiles(''); showGal(); }
+  function openGalleryChangeAlc(i){ galTarget={alcIndex:i}; ensureGal(); document.getElementById('vgalTitle').textContent='Swap this flower'; document.getElementById('vgalSearch').value=''; renderGalTiles(''); showGal(); }
+  function galCurrent(){ if(!galTarget) return null; if(galTarget.add) return null; if(galTarget.alacarte) return null; if(galTarget.alcIndex!=null){ return alacarte[galTarget.alcIndex]?alacarte[galTarget.alcIndex].name:null; } if(galTarget.addIndex!=null){ var arr=additions[galTarget.piece]||[]; return arr[galTarget.addIndex]?arr[galTarget.addIndex].name:null; } if(galTarget.piece) return slotFlower(byId[galTarget.piece], galTarget.idx); return palette[galTarget.role][galTarget.idx]; }
+  function galSelect(name){ if(!galTarget) return;
+    if(galTarget.alacarte){ alacarte.push({name:name, bunches:1}); closeGal(); renderResults(); saveState(); return; }
+    if(galTarget.alcIndex!=null){ alacarte[galTarget.alcIndex].name=name; closeGal(); renderResults(); saveState(); return; }
+    if(galTarget.add){ var pr=prod(name); var role=pr?pr.role:'focal'; var unit=(role==='greenery'||role==='filler')?'b':'s'; additions[galTarget.piece]=additions[galTarget.piece]||[]; additions[galTarget.piece].push({name:name, amt:unit==='b'?0.25:5, unit:unit}); closeGal(); renderResults(); saveState(); return; }
+    if(galTarget.addIndex!=null){ var a=additions[galTarget.piece][galTarget.addIndex]; var pr2=prod(name); var role2=pr2?pr2.role:'focal'; a.name=name; a.unit=(role2==='greenery'||role2==='filler')?'b':'s'; closeGal(); renderResults(); saveState(); return; }
+    if(galTarget.piece){ overrides[galTarget.piece]=overrides[galTarget.piece]||{}; overrides[galTarget.piece][galTarget.idx]=name; if(galTarget.piece==='greenery-rect' && galTarget.idx===0){ amounts['greenery-rect']=amounts['greenery-rect']||[0]; amounts['greenery-rect'][0]= /italian ruscus/i.test(name)?1:0.75; } closeGal(); renderResults(); saveState(); } else { palette[galTarget.role][galTarget.idx]=name; touched[galTarget.role+'|'+galTarget.idx]=true; closeGal(); renderPalette(); saveState(); } }
+  function closeGal(){ var g=document.getElementById('bcfVgal'); if(g) g.classList.remove('on'); galTarget=null; }
+  function galTile(o, label){
+    var url=(window.BCF_PHOTOS||{})[o.name];
+    var img=url?'<span class="vtile-img" style="background-image:url(\''+url+'\')"></span>':'<span class="vtile-img ph"></span>';
+    var sel=(galCurrent()===o.name)?' on':'';
+    return '<button type="button" class="vtile'+sel+'" data-name="'+o.name.replace(/"/g,'&quot;')+'">'+img+'<span class="vtile-name">'+label+'</span></button>';
+  }
+  function renderGalChips(){
+    var wrap=document.getElementById('vgalChips'); if(!wrap) return;
+    var isAdd = galTarget && (galTarget.add || galTarget.addIndex!=null || galTarget.alacarte || galTarget.alcIndex!=null);
+    if(!isAdd){ wrap.style.display='none'; wrap.innerHTML=''; return; }
+    wrap.style.display='flex';
+    var ORDER=['greenery','focal','line','spray','detail','filler'];
+    var SHORT={greenery:'Greenery',focal:'Focal',line:'Line',spray:'Spray',detail:'Detail',filler:'Filler'};
+    var present={}; PRODUCTS.forEach(function(o){ present[o.role]=true; });
+    var chips=['<button type="button" class="vchip'+(galFilter==='all'?' on':'')+'" data-filter="all">All</button>'];
+    ORDER.forEach(function(r){ if(present[r]) chips.push('<button type="button" class="vchip'+(galFilter===r?' on':'')+'" data-filter="'+r+'">'+SHORT[r]+'</button>'); });
+    wrap.innerHTML=chips.join('');
+    wrap.querySelectorAll('[data-filter]').forEach(function(b){ b.addEventListener('click',function(){ galFilter=b.getAttribute('data-filter'); renderGalChips(); renderGalTiles(document.getElementById('vgalSearch').value); }); });
+  }
+  function renderGalTiles(q){
+    renderGalTilesInner(q);
+    var grid=document.getElementById('vgalGrid');
+    var el=grid;
+    while(el && el.id!=='bcfVgal'){ el.scrollTop=0; el=el.parentElement; }
+    var modal=document.getElementById('bcfVgal'); if(modal) modal.scrollTop=0;
+  }
+  function renderGalTilesInner(q){
+    if(!galTarget) return;
+    var role=galTarget.role; q=(q||'').toLowerCase().trim();
+    var grid=document.getElementById('vgalGrid');
+    if(grid){ requestAnimationFrame(function(){ grid.scrollTop=0; }); }
+    var groups={}, gorder=[];
+    prodsByRole(role).forEach(function(o){ var t=splitName(o.name).type; if(!groups[t]){groups[t]=[];gorder.push(t);} groups[t].push(o); });
+    function match(o){ return !q || o.name.toLowerCase().indexOf(q)>=0; }
+    function attach(){ grid.querySelectorAll('.vtile').forEach(function(b){ b.addEventListener('click',function(){ galSelect(b.getAttribute('data-name')); }); }); }
+    renderGalChips();
+    if(galTarget.add || galTarget.addIndex!=null || galTarget.alacarte || galTarget.alcIndex!=null){
+      var seen={}; var all=PRODUCTS.filter(function(o){ if(seen[o.name])return false; seen[o.name]=1; return match(o) && (galFilter==='all'||o.role===galFilter); });
+      var ORDER=['greenery','focal','line','spray','detail','filler'];
+      var byRole={}; all.forEach(function(o){ (byRole[o.role]=byRole[o.role]||[]).push(o); });
+      var ghtml='';
+      ORDER.forEach(function(r){ var list=(byRole[r]||[]).sort(function(a,b){ return a.name.localeCompare(b.name,undefined,{sensitivity:'base'}); }); if(!list.length) return; ghtml+='<div class="vgal-gh">'+ROLE_NAME[r]+'</div><div class="vgal-row">'+list.map(function(o){ var sp=splitName(o.name); return galTile(o, sp.color?sp.type+' \u00b7 '+sp.color:sp.type); }).join('')+'</div>'; });
+      grid.innerHTML = ghtml || '<div class="vgal-empty">No matches</div>';
+      attach(); return;
+    }
+    if(role==='greenery'){
+      var glist=prodsByRole(role).filter(match).slice().sort(function(a,b){ return a.name.localeCompare(b.name, undefined, {sensitivity:'base'}); });
+      grid.innerHTML = glist.length ? '<div class="vgal-row">'+glist.map(function(o){ var sp=splitName(o.name); return galTile(o, sp.color?sp.type+' \u00b7 '+sp.color:sp.type); }).join('')+'</div>' : '<div class="vgal-empty">No matches</div>';
+      attach(); return;
+    }
+    var singles=[], multis=[];
+    gorder.forEach(function(t){ (groups[t].length>1?multis:singles).push(t); });
+    multis.sort(function(a,b){ return a.localeCompare(b); });
+    singles.sort(function(a,b){ return a.localeCompare(b); });
+    var html='';
+    multis.forEach(function(t){
+      var tiles=groups[t].filter(match);
+      if(!tiles.length) return;
+      html+='<div class="vgal-gh">'+t+'</div><div class="vgal-row">'+tiles.map(function(o){ return galTile(o, splitName(o.name).color||'Standard'); }).join('')+'</div>';
+    });
+    var singleTiles=[];
+    singles.forEach(function(t){ groups[t].forEach(function(o){ if(match(o)) singleTiles.push(galTile(o, splitName(o.name).type)); }); });
+    if(singleTiles.length) html+='<div class="vgal-gh">More options</div><div class="vgal-row">'+singleTiles.join('')+'</div>';
+    grid.innerHTML=html||'<div class="vgal-empty">No matches</div>';
+    attach();
+  }
+
+  /* ---------------- STEP 3: recipes ---------------- */
+  function pieceFlowerForSlot(p, role, roleIndex){
+    var arr=palette[role]||[];
+    return arr[roleIndex] || arr[arr.length-1] || (prodsByRole(role)[0]||{}).name;
+  }
+  function ensureAmounts(){
+    selectedPieces().forEach(function(p){
+      if(!amounts[p.id]) amounts[p.id]=p.recipe.map(function(sl){ return sl[1]; });
+      else p.recipe.forEach(function(sl,i){ if(amounts[p.id][i]==null) amounts[p.id][i]=sl[1]; else if(!p.greeneryOnly && amounts[p.id][i] < sl[1]) amounts[p.id][i]=sl[1]; });
+      if(!removed[p.id]) removed[p.id]={};
+    });
+  }
+  function slotFlower(p, slotIdx){
+    if(overrides[p.id] && overrides[p.id][slotIdx]) return overrides[p.id][slotIdx];
+    var role=p.recipe[slotIdx][0];
+    var roleIdx=0;
+    for(var i=0;i<slotIdx;i++){ if(p.recipe[i][0]===role) roleIdx++; }
+    return pieceFlowerForSlot(p, role, roleIdx);
+  }
+  function thumbMini(name){ var url=(window.BCF_PHOTOS||{})[name]; var t=' title="'+String(name).replace(/"/g,'')+'"'; return url?'<span class="amini"'+t+' style="background-image:url(\''+url+'\')"></span>':'<span class="amini ph"'+t+'></span>'; }
+  function renderResults(){
+    ensureAmounts();
+    var mount=document.getElementById('resultsMount');
+    var pcs=selectedPieces();
+    if(!pcs.length){ mount.innerHTML='<div class="emptyq"><span class="floret" style="font-size:28px;">&#10047;</span><p>No arrangements selected yet.</p></div>'; return; }
+
+    var html='';
+    function renderPiece(p){
+      var mult=p.mult||1;
+      var slots = p.recipe.map(function(sl,i){
+        var role=sl[0], unit=sl[2], opt=isOpt(sl);
+        var fl=slotFlower(p,i);
+        var amt=amounts[p.id][i];
+        var isRm=!!(opt && removed[p.id] && removed[p.id][i]);
+        var amtCtl;
+        if(unit==='b'){
+          amtCtl='<div class="amt"><button data-dec="'+p.id+'|'+i+'">&#8722;</button><span class="av" data-av="'+p.id+'|'+i+'">'+frac(amt)+' bu</span><button data-inc="'+p.id+'|'+i+'">+</button></div>';
+        } else {
+          amtCtl='<div class="amt"><button data-dec="'+p.id+'|'+i+'">&#8722;</button><span class="av" data-av="'+p.id+'|'+i+'">'+amt+' st</span><button data-inc="'+p.id+'|'+i+'">+</button></div>';
+        }
+        var ctrl = opt && isRm
+          ? '<button class="addback" data-add="'+p.id+'|'+i+'">+ add back</button>'
+          : amtCtl + (opt?'<button class="rm" data-rm="'+p.id+'|'+i+'" title="Remove">&times;</button>':'');
+        var sp=splitName(fl); var dn=sp.color?sp.type+' \u00b7 '+sp.color:sp.type;
+        return '<div class="slot'+(opt?' opt':'')+(isRm?' removed':'')+'">'+
+          '<button type="button" class="rpick" data-rp="'+p.id+'|'+i+'"'+(isRm?' disabled':'')+'>'+
+            thumb(fl)+
+            '<span class="rinfo"><span class="rrole">'+ROLE_NAME[role]+'</span><span class="rname">'+dn+'</span></span>'+
+            (isRm?'':'<span class="rchev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>')+
+          '</button>'+
+          (opt&&!isRm?'<span class="optbadge">optional</span>':'')+
+          ctrl+'</div>';
+      }).join('');
+      var aqtxt='';
+      var qtyCtl=' <span class="atqty"><span class="aqlabel">Qty</span><span class="aqv">'+p.qty+'</span><span class="aqspin"><button type="button" data-aqinc="'+p.id+'" aria-label="More"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button><button type="button" data-aqdec="'+p.id+'" aria-label="Fewer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></span></span>';
+      var vis=p.recipe.map(function(sl,i){return i;}).filter(function(i){ return !(isOpt(p.recipe[i]) && removed[p.id]&&removed[p.id][i]); });
+      var strip=vis.map(function(i){ return thumbMini(slotFlower(p,i)); }).join('');
+      var addSlots=(additions[p.id]||[]).map(function(a,ai){
+        var pr=prod(a.name)||{}; var role=pr.role||'focal';
+        var sp=splitName(a.name); var dn=sp.color?sp.type+' \u00b7 '+sp.color:sp.type;
+        var amtCtl=a.unit==='b'
+          ? '<div class="amt"><button data-addec="'+p.id+'|'+ai+'">&#8722;</button><span class="av" data-adav="'+p.id+'|'+ai+'">'+frac(a.amt)+' bu</span><button data-adinc="'+p.id+'|'+ai+'">+</button></div>'
+          : '<div class="amt"><button data-addec="'+p.id+'|'+ai+'">&#8722;</button><span class="av" data-adav="'+p.id+'|'+ai+'">'+a.amt+' st</span><button data-adinc="'+p.id+'|'+ai+'">+</button></div>';
+        return '<div class="slot added"><button type="button" class="rpick" data-arp="'+p.id+'|'+ai+'">'+thumb(a.name)+'<span class="rinfo"><span class="rrole">'+ROLE_NAME[role]+' \u00b7 added</span><span class="rname">'+dn+'</span></span><span class="rchev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button>'+amtCtl+'<button class="rm" data-adrm="'+p.id+'|'+ai+'" title="Remove">&times;</button></div>';
+      }).join('');
+      var addRow='<div class="addrow"><button type="button" class="addflower" data-addflower="'+p.id+'">+ Add a flower</button><span class="adddisc">Sold by the bunch, not the stem.</span></div>';
+      return '<div class="arr'+(openArrs[p.id]?' open':'')+'"><div class="arrhead" data-arrtoggle="'+p.id+'">'+
+        '<div class="arrhtop"><div class="arrhname"><div class="at">'+p.name+qtyCtl+'</div>'+
+        (aqtxt?'<div class="aq">'+aqtxt+'</div>':'')+'</div>'+
+        '<span class="arrchev"><span class="arrchevlbl">Edit recipe</span><span class="arrchevico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></span></div>'+
+        '<div class="arrstrip">'+strip+'</div>'+
+        '</div><div class="arrbody"><div class="swaphint">Click any flower to swap it for one you like better.</div>'+slots+addSlots+addRow+'</div></div>';
+    }
+    CATS.forEach(function(cat){ var cp=cat.pieces.filter(function(x){return x.qty>0;}); if(!cp.length) return; html+='<div class="rescat'+(closedCats[cat.id]?'':' open')+'"><button type="button" class="rescathead" data-cattoggle="'+cat.id+'"><span class="catname">'+cat.name+'</span><span class="catchev"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="rescatbody">'+cp.map(renderPiece).join('')+'</div></div>'; });
+
+    var alcRows = alacarte.length
+      ? alacarte.map(function(a,ai){ var sp=splitName(a.name); var dn=sp.color?sp.type+' \u00b7 '+sp.color:sp.type; return '<div class="slot"><button type="button" class="rpick" data-alcp="'+ai+'">'+thumb(a.name)+'<span class="rinfo"><span class="rrole">Extra</span><span class="rname">'+dn+'</span></span><span class="rchev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="amt"><button data-aldec="'+ai+'">&#8722;</button><span class="av">'+a.bunches+' bu</span><button data-alinc="'+ai+'">+</button></div><button class="rm" data-alrm="'+ai+'" title="Remove">&times;</button></div>'; }).join('')
+      : '<div class="slot"><button type="button" class="rpick alc-ph-row" data-alcadd="1"><span class="thmb ph"></span><span class="rinfo"><span class="rrole">Extra</span><span class="rname alc-ph">Choose a flower</span></span><span class="rchev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button></div>';
+    html+='<div class="alc"><div class="alchead">Extra <em>Flowers</em></div>'+
+      '<div class="alcsub">Want a few extra flowers on their own (loose stems for the tables, extra filler, a backup)? Add them to your order here, separate from your recipes.</div>'+
+      alcRows+
+      (alacarte.length ? '<div class="addrow"><button type="button" class="addflower" data-alcadd="1">+ Add another flower</button><span class="adddisc">Sold by the bunch, not the stem, and added to your order.</span></div>' : '')+
+    '</div>';
+
+    // total card with all three actions inside it, equal weight
+    html+='<div class="totalcard">'+
+        '<div class="tcrow"><div class="tclab">Your total</div><div class="tcnum" id="totalNum">$0</div></div>'+
+        '<div class="tcmeta" id="totalMeta"></div>'+
+        '<div class="tcnote">Flowers are sold by the <b>bunch</b>, not the stem, and spread across all your arrangements. Add to cart to see every bunch itemized. Any extra stems in a bunch are yours to use as needed.</div>'+
+        '<div class="tcactions">'+
+          '<button class="tccart" id="cartBtn">Add my flowers to cart &#8594;</button>'+
+          '<button class="tcsec" id="tailorBtn">Have us tailor it for you</button>'+
+          '<button class="tcsec" id="emailLaterBtn">Email it to myself for later</button>'+
+        '</div>'+
+        '<div class="tcemail" id="softLead">'+(leadEmail
+          ? '<span class="slok">&#10003; Sent to '+leadEmail+'. It’s in your inbox, ready when you are.</span>'
+          : '')+'</div>'+
+      '</div>'+
+      '<div id="masterList" hidden></div>'+
+      '<div class="disc">This quote reflects our current pricing. We understand you may not be ready to purchase, but if you come back at a later date, the total and pricing may have changed due to market fluctuation.</div>'+
+      '<div class="endfoot"><button id="restartBtn">&#8634; Start over</button></div>';
+
+    mount.innerHTML=html;
+
+    mount.querySelectorAll('[data-inc]').forEach(function(b){ b.addEventListener('click',function(){ chAmt(b.getAttribute('data-inc'),1); }); });
+    mount.querySelectorAll('[data-dec]').forEach(function(b){ b.addEventListener('click',function(){ chAmt(b.getAttribute('data-dec'),-1); }); });
+    mount.querySelectorAll('[data-rm]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-rm').split('|'); removed[k[0]][+k[1]]=true; renderResults(); }); });
+    mount.querySelectorAll('[data-add]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-add').split('|'); delete removed[k[0]][+k[1]]; renderResults(); }); });
+    mount.querySelectorAll('[data-rp]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-rp').split('|'); var p=byId[k[0]]; openGallery(p.recipe[+k[1]][0], +k[1], k[0]); }); });
+    mount.querySelectorAll('[data-arrtoggle]').forEach(function(b){ b.addEventListener('click',function(){ var id=b.getAttribute('data-arrtoggle'); if(openArrs[id]){ delete openArrs[id]; } else { openArrs[id]=true; } b.closest('.arr').classList.toggle('open'); }); });
+    mount.querySelectorAll('[data-cattoggle]').forEach(function(b){ b.addEventListener('click',function(){ var id=b.getAttribute('data-cattoggle'); if(closedCats[id]){ delete closedCats[id]; } else { closedCats[id]=true; } b.closest('.rescat').classList.toggle('open'); }); });
+    mount.querySelectorAll('[data-addflower]').forEach(function(b){ b.addEventListener('click',function(){ openGalleryAdd(b.getAttribute('data-addflower')); }); });
+    mount.querySelectorAll('[data-arp]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-arp').split('|'); openGalleryChangeAdd(k[0], +k[1]); }); });
+    mount.querySelectorAll('[data-adrm]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-adrm').split('|'); additions[k[0]].splice(+k[1],1); renderResults(); saveState(); }); });
+    mount.querySelectorAll('[data-adinc]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-adinc').split('|'); chAdd(k[0],+k[1],1); }); });
+    mount.querySelectorAll('[data-addec]').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-addec').split('|'); chAdd(k[0],+k[1],-1); }); });
+    mount.querySelectorAll('[data-alcadd]').forEach(function(b){ b.addEventListener('click',function(){ openGalleryAlc(); }); });
+    mount.querySelectorAll('[data-alcp]').forEach(function(b){ b.addEventListener('click',function(){ openGalleryChangeAlc(+b.getAttribute('data-alcp')); }); });
+    mount.querySelectorAll('[data-alrm]').forEach(function(b){ b.addEventListener('click',function(){ alacarte.splice(+b.getAttribute('data-alrm'),1); renderResults(); saveState(); }); });
+    mount.querySelectorAll('[data-alinc]').forEach(function(b){ b.addEventListener('click',function(){ var i=+b.getAttribute('data-alinc'); alacarte[i].bunches++; renderResults(); saveState(); }); });
+    mount.querySelectorAll('[data-aldec]').forEach(function(b){ b.addEventListener('click',function(){ var i=+b.getAttribute('data-aldec'); alacarte[i].bunches=Math.max(1,alacarte[i].bunches-1); renderResults(); saveState(); }); });
+    function syncStep1(id){ var p=byId[id]; var row=root.querySelector('.item[data-id="'+id+'"]'); if(row){ row.classList.toggle('on',p.qty>0); var q=row.querySelector('[data-qty="'+id+'"]'); if(q)q.textContent=p.qty; var d=row.querySelector('[data-dec="'+id+'"]'); if(d)d.disabled=p.qty===0; } refreshCounts(); }
+    mount.querySelectorAll('[data-aqinc]').forEach(function(b){ b.addEventListener('click',function(e){ e.stopPropagation(); var id=b.getAttribute('data-aqinc'); byId[id].qty++; syncStep1(id); saveState(); renderResults(); }); });
+    mount.querySelectorAll('[data-aqdec]').forEach(function(b){ b.addEventListener('click',function(e){ e.stopPropagation(); var id=b.getAttribute('data-aqdec'); byId[id].qty=Math.max(1,byId[id].qty-1); syncStep1(id); saveState(); renderResults(); }); });
+    var elb=document.getElementById('emailLaterBtn'); if(elb) elb.addEventListener('click',function(){
+      if(leadEmail) return;
+      var sl=document.getElementById('softLead');
+      if(sl.querySelector('#leadForm')){ sl.innerHTML=''; elb.classList.remove('on'); return; }
+      elb.classList.add('on');
+      sl.innerHTML='<form id="leadForm" class="slform slstack"><input id="leadName" type="text" required placeholder="Full name" autocomplete="name" /><input id="leadEmail" type="email" required placeholder="you@email.com" autocomplete="email" /><input id="leadEmail2" type="email" required placeholder="Confirm email" autocomplete="email" onpaste="return false" /><div class="slerr" id="leadErr"></div><button type="submit">Send it to me</button></form>';
+      bindLeadForm(); var inp=sl.querySelector('#leadName'); if(inp) inp.focus();
+    });
+    function bindLeadForm(){ var lf=document.getElementById('leadForm'); if(lf) lf.addEventListener('submit',function(e){ e.preventDefault();
+      var nm=(document.getElementById('leadName').value||'').trim();
+      if(!nm){ document.getElementById('leadName').focus(); return; }
+      var v=(document.getElementById('leadEmail').value||'').trim();
+      var le=document.getElementById('leadErr');
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ if(le) le.textContent='Please enter a valid email address.'; document.getElementById('leadEmail').focus(); return; }
+      var v2=(document.getElementById('leadEmail2').value||'').trim();
+      if(v.toLowerCase()!==v2.toLowerCase()){ if(le) le.textContent='Those emails don\u2019t match \u2014 please double-check.'; document.getElementById('leadEmail2').focus(); return; }
+      if(le) le.textContent='';
+      leadName=nm; leadEmail=v;
+      /* TODO(Kirunda): POST {name:leadName, email:leadEmail, order:buildSummary()} to your email tool (Flodesk) + send the plan (greet them by leadName). */
+      saveState();
+      var sl=document.getElementById('softLead'); if(sl) sl.innerHTML='<span class="slok">&#10003; Sent to '+leadEmail+'. It’s in your inbox, ready when you are.</span>';
+      var elb=document.getElementById('emailLaterBtn'); if(elb) elb.classList.remove('on');
+    }); }
+    bindLeadForm();
+    var cb=document.getElementById('cartBtn'); if(cb) cb.addEventListener('click',function(){ var sl=document.getElementById('softLead'); if(sl) sl.innerHTML='<span class="slnote">Checkout is being connected. For now, email it to yourself or have us tailor it, and we\u2019ll take it from there.</span>'; });
+    var tb=document.getElementById('tailorBtn'); if(tb) tb.addEventListener('click',openTailor);
+    document.getElementById('restartBtn').addEventListener('click',restart);
+    recompute();
+  }
+  function buildSummary(){
+    var lines=[];
+    CATS.forEach(function(cat){ var cp=cat.pieces.filter(function(p){return p.qty>0;}); if(!cp.length) return; lines.push(''); lines.push(cat.name.toUpperCase()); cp.forEach(function(p){ var mult=p.mult||1; lines.push((p.qty>1?p.qty+'x ':'')+p.name+(mult>1?' (set of '+mult+')':'')); p.recipe.forEach(function(sl,i){ if(removed[p.id] && removed[p.id][i]) return; var fl=slotFlower(p,i); var amt=amounts[p.id][i]; lines.push('   - '+(sl[2]==='b'?frac(amt)+' bunch':amt+' stem'+(amt>1?'s':''))+' '+fl); }); (additions[p.id]||[]).forEach(function(a){ lines.push('   - '+(a.unit==='b'?frac(a.amt)+' bunch':a.amt+' stem'+(a.amt>1?'s':''))+' '+a.name+' (added)'); }); }); });
+    if(alacarte.length){ lines.push(''); lines.push('EXTRA FLOWERS'); alacarte.forEach(function(a){ lines.push('   - '+a.bunches+' bunch'+(a.bunches>1?'es':'')+' '+a.name); }); }
+    var demand={}, order=[];
+    selectedPieces().forEach(function(p){ var mult=(p.mult||1)*p.qty; p.recipe.forEach(function(sl,i){ if(isOpt(sl) && removed[p.id]&&removed[p.id][i])return; var fl=slotFlower(p,i); var pr=prod(fl); if(!pr)return; var u=amounts[p.id][i]; var bu=sl[2]==='b'?u:u/pr.stems; if(!demand[fl]){demand[fl]={bu:0};order.push(fl);} demand[fl].bu+=bu*mult; }); (additions[p.id]||[]).forEach(function(a){ var pr=prod(a.name); if(!pr)return; var bu=a.unit==='b'?a.amt:a.amt/pr.stems; if(!demand[a.name]){demand[a.name]={bu:0};order.push(a.name);} demand[a.name].bu+=bu*mult; }); });
+    alacarte.forEach(function(a){ var pr=prod(a.name); if(!pr)return; if(!demand[a.name]){demand[a.name]={bu:0};order.push(a.name);} demand[a.name].bu+=a.bunches; });
+    var shop=[], total=0; order.forEach(function(fl){ var pr=prod(fl); var b=Math.max(1,Math.ceil(demand[fl].bu-1e-9)); total+=b*pr.bunch; shop.push(b+' bunch '+fl+' ($'+Math.round(b*pr.bunch)+')'); });
+    return { pieces:lines, shop:shop, total:total };
+  }
+  function openTailor(){
+    var sum=buildSummary(); if(!sum.pieces.length) return;
+    var m=document.getElementById('bcfTailor');
+    if(!m){ m=document.createElement('div'); m.className='vgal'; m.id='bcfTailor'; root.appendChild(m); m.addEventListener('click',function(e){ if(e.target===m) m.classList.remove('on'); }); }
+    var esc=function(s){ return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); };
+    var sumText=esc(sum.pieces.join('\n').trim()+'\n\nWHOLESALE SHOPPING LIST\n'+sum.shop.join('\n')+'\n\nEstimated total: $'+Math.round(sum.total));
+    m.innerHTML='<div class="vgal-card"><div class="vgal-top"><span class="vgal-title">Have our florists tailor it</span><button type="button" class="vgal-x" id="tlrX">&times;</button></div>'+
+      '<div class="tlr-body">'+
+        '<p class="tlr-lead">No need to re-enter your flowers, we’ll receive everything you built. Just share a few details so we can tailor it to your needs.</p>'+
+        '<form id="tlrForm">'+
+          '<div class="tlr-grid">'+
+            '<label class="tlr-f"><span>Your name *</span><input id="tlrName" type="text" required autocomplete="name" /></label>'+
+            '<label class="tlr-f"><span>Email *</span><input id="tlrEmail" type="email" required placeholder="you@email.com" autocomplete="email" /></label>'+
+            '<label class="tlr-f"><span>Confirm email *</span><input id="tlrEmail2" type="email" required placeholder="Re-enter your email" autocomplete="email" onpaste="return false" /></label>'+
+            '<label class="tlr-f"><span>Wedding date *</span><input id="tlrDate" type="text" required placeholder="MM / DD / YYYY" /></label>'+
+            '<label class="tlr-f"><span>Colors or vibe</span><input id="tlrColors" type="text" placeholder="e.g. blush, ivory, garden" /></label>'+
+          '</div>'+
+          '<label class="tlr-f"><span>Budget range *</span><select id="tlrBudget" required>'+
+              '<option value="" disabled selected>Select a range</option>'+
+              '<option>$500 – $800</option>'+
+              '<option>$800 – $1,200</option>'+
+              '<option>$1,200 – $1,600</option>'+
+              '<option>$1,600 – $2,000</option>'+
+              '<option>$2,000 – $2,500</option>'+
+              '<option>$2,500 – $3,000</option>'+
+              '<option>$3,000 – $4,000</option>'+
+              '<option>$4,000+</option>'+
+          '</select></label>'+
+          '<div class="tlr-needs"><span class="tlr-needs-q">What do you need help with? *</span>'+
+            '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="Adjusting quantities (more or fewer arrangements)" /><span>Adjusting quantities (more or fewer arrangements)</span></label>'+
+            '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="Specific flowers or substitutions" /><span>Specific flowers or substitutions</span></label>'+
+            '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="Matching my colors / vibe" /><span>Matching my colors / vibe</span></label>'+
+            '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="Fitting my budget" /><span>Fitting my budget</span></label>'+
+            '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="A flower or piece not listed here" /><span>A flower or piece not listed here</span></label>'+
+            '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="Overall guidance, I am not sure" /><span>Overall guidance, I’m not sure where to start</span></label>'+
+          '</div>'+
+          '<label class="tlr-f"><span>Tell us exactly what you need tailored *</span><textarea id="tlrNote" rows="3" required placeholder="What is not working, what you want changed, must-have or skip flowers, quantities, specific pieces..."></textarea></label>'+
+          '<div class="tlr-err" id="tlrErr"></div>'+
+          '<button type="submit" class="tlr-send">Send my plan to your florists</button>'+
+        '</form>'+
+        '<div id="tlrOk"></div>'+
+      '</div></div>';
+    m.classList.add('on');
+    document.getElementById('tlrX').addEventListener('click',function(){ m.classList.remove('on'); });
+    document.getElementById('tlrForm').addEventListener('submit',function(e){ e.preventDefault();
+      var em=(document.getElementById('tlrEmail').value||'').trim();
+      var teErr=document.getElementById('tlrErr');
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ if(teErr) teErr.textContent='Please enter a valid email address.'; document.getElementById('tlrEmail').focus(); return; }
+      var em2=(document.getElementById('tlrEmail2').value||'').trim();
+      if(em.toLowerCase()!==em2.toLowerCase()){ if(teErr) teErr.textContent='Those emails don\u2019t match \u2014 please double-check.'; document.getElementById('tlrEmail2').focus(); return; }
+      if(teErr) teErr.textContent='';
+      var dateEl=document.getElementById('tlrDate'); if(!(dateEl.value||'').trim()){ dateEl.focus(); return; }
+      var bdg=document.getElementById('tlrBudget'); if(!bdg.value){ bdg.focus(); return; }
+      var needs=[].slice.call(document.querySelectorAll('.tlrNeed:checked')).map(function(c){return c.value;});
+      var noteEl=document.getElementById('tlrNote'); var noteVal=(noteEl.value||'').trim();
+      if(!needs.length){ document.querySelector('.tlr-needs').scrollIntoView({block:'center'}); document.querySelector('.tlr-needs').classList.add('flash'); return; }
+      if(!noteVal){ noteEl.focus(); return; }
+      var payload={ name:document.getElementById('tlrName').value, email:em, weddingDate:document.getElementById('tlrDate').value, colors:document.getElementById('tlrColors').value, budget:bdg.value, needs:needs, note:noteVal, summary:sum };
+      /* TODO(Kirunda): (1) email `payload` to quotes@bloomcultureflowers.com as a Tailor Request (see "Tailor Request (sample).html" for the layout). (2) Send the couple a confirmation copy of their request to `payload.email` (same details + their build). (3) Save the lead to Flodesk. */
+      document.getElementById('tlrForm').style.display='none';
+      var d=document.querySelector('#bcfTailor .tlr-sum'); if(d) d.style.display='none';
+      var lead=document.querySelector('#bcfTailor .tlr-lead'); if(lead) lead.style.display='none';
+      var ttl=document.querySelector('#bcfTailor .vgal-title'); if(ttl) ttl.textContent='';
+      document.getElementById('tlrOk').innerHTML='<div class="tlr-okmsg"><img class="tlr-oklogo" src="https://cdn.shopify.com/s/files/1/0750/7984/4147/files/bcf_favicon.png?v=1765476178" alt="Bloom Culture" /><span class="tlr-okhead">Your request is on its way.</span><span class="tlr-oksub">We’ve got everything you built, and a copy will be sent to your inbox. We’ll be in touch soon with your tailored quote.</span></div>';
+    });
+  }
+  function chAmt(key,delta){
+    var k=key.split('|'), id=k[0], i=+k[1];
+    var p=byId[id], unit=p.recipe[i][2], floor=p.recipe[i][1];
+    if(unit==='b'){
+      var steps=[1/7,1/6,1/5,1/4,1/3,1/2,2/3,3/4,1,1.25,1.5,2,3,4];
+      var cur=amounts[id][i], idx=0, best=1e9;
+      steps.forEach(function(v,j){ if(Math.abs(v-cur)<best){ best=Math.abs(v-cur); idx=j; } });
+      idx=Math.max(0,Math.min(steps.length-1,idx+delta));
+      var nv=steps[idx]; if(nv<floor-1e-9) nv=floor;
+      amounts[id][i]=nv;
+    } else {
+      amounts[id][i]=Math.max(floor, amounts[id][i]+delta);
+    }
+    recompute();
+  }
+  function chAdd(pid,ai,delta){ var a=additions[pid][ai]; if(!a) return; if(a.unit==='b'){ var steps=[1/4,1/3,1/2,2/3,3/4,1,1.25,1.5,2,3,4]; var cur=a.amt,idx=0,best=1e9; steps.forEach(function(v,j){ if(Math.abs(v-cur)<best){best=Math.abs(v-cur);idx=j;} }); idx=Math.max(0,Math.min(steps.length-1,idx+delta)); a.amt=steps[idx]; } else { a.amt=Math.max(1,a.amt+delta); } recompute(); saveState(); }
+  function recompute(){
+    // per-slot amount labels + per-arrangement cost + master demand
+    var demand={}; var order=[];
+    selectedPieces().forEach(function(p){
+      var mult=(p.mult||1)*p.qty;
+      p.recipe.forEach(function(sl,i){
+        var role=sl[0], unit=sl[2];
+        var av=root.querySelector('[data-av="'+p.id+'|'+i+'"]');
+        if(av) av.textContent = unit==='b' ? frac(amounts[p.id][i])+' bu' : amounts[p.id][i]+' st';
+        if(isOpt(sl) && removed[p.id] && removed[p.id][i]) return;
+        var fl=slotFlower(p,i); var pr=prod(fl); if(!pr) return;
+        var units = amounts[p.id][i]; // stems or bunch-fraction
+        var bunchUnits = unit==='b' ? units : units/pr.stems;
+        var key=role+'|'+fl;
+        if(!demand[key]){ demand[key]={name:fl, bunchUnits:0}; order.push(key); }
+        demand[key].bunchUnits += bunchUnits * mult;
+      });
+      (additions[p.id]||[]).forEach(function(a,ai){
+        var adav=root.querySelector('[data-adav="'+p.id+'|'+ai+'"]'); if(adav) adav.textContent = a.unit==='b'?frac(a.amt)+' bu':a.amt+' st';
+        var pr=prod(a.name); if(!pr) return; var bu=a.unit==='b'?a.amt:a.amt/pr.stems;
+        var akey=pr.role+'|'+a.name;
+        if(!demand[akey]){ demand[akey]={name:a.name, bunchUnits:0}; order.push(akey); }
+        demand[akey].bunchUnits += bu * mult;
+      });
+    });
+    alacarte.forEach(function(a){ var pr=prod(a.name); if(!pr) return; var key='alc|'+a.name; if(!demand[key]){ demand[key]={name:a.name, label:a.name+' \u00b7 extra', bunchUnits:0}; order.push(key); } demand[key].bunchUnits += a.bunches; });
+    var total=0, rows='';
+    order.forEach(function(key){
+      var d=demand[key]; var pr=prod(d.name);
+      var bunches=Math.max(d.bunchUnits>0?1:0, Math.ceil(d.bunchUnits-1e-9));
+      var cost=bunches*pr.bunch; total+=cost;
+      rows+='<div class="bline"><span class="bn"><b>'+bunches+'</b>'+(d.label||d.name)+'</span><span class="bc">'+money(cost)+'</span></div>';
+    });
+    var ml=document.getElementById('masterList'); if(ml) ml.innerHTML=rows;
+    var pieceCount=0; selectedPieces().forEach(function(p){ pieceCount += p.qty*(p.mult||1); });
+    var tn=document.getElementById('totalNum'); if(tn) tn.textContent=money(total);
+    var tm=document.getElementById('totalMeta'); if(tm) tm.innerHTML='Everything you need for your wedding flower package.<span class="tcship"><span class="floret">&#10047;</span> Your order qualifies for free shipping.</span>';
+    document.getElementById('barNum').textContent=money(total);
+    document.getElementById('barLabel').textContent='Your running total';
+    saveState();
+  }
+
+  /* ---------------- nav ---------------- */
+  function setStep(n){
+    step=n; maxReached=Math.max(maxReached,n); root.classList.remove('s2','s3');
+    if(n===2) root.classList.add('s2');
+    if(n===3) root.classList.add('s3');
+    root.querySelectorAll('.stepdot').forEach(function(d){
+      var s=+d.getAttribute('data-step');
+      d.classList.toggle('on',s===n); d.classList.toggle('done',s<n);
+    });
+    document.getElementById('backBtn').style.display = 'inline-block';
+    var next=document.getElementById('nextBtn');
+    if(n===1){ next.textContent='Next: choose flowers \u2192'; updateBar(); }
+    else if(n===2){ renderPalette(); next.textContent='Next: see recipes \u2192'; document.getElementById('barNum').innerHTML='<span class="z">Pick your flowers</span>'; document.getElementById('barLabel').textContent='Step 2 of 3'; updatePaletteBar(); }
+    else if(n===3){ renderResults(); next.style.display='none'; }
+    if(n<3) next.style.display='inline-block';
+    try{ root.scrollIntoView({block:'start'}); }catch(e){}
+    saveState();
+  }
+  function updateBar(){
+    if(step!==1) return;
+    var n=0; selectedPieces().forEach(function(p){ n+=p.qty; });
+    var num=document.getElementById('barNum'), next=document.getElementById('nextBtn'), lbl=document.getElementById('barLabel');
+    if(n===0){ num.innerHTML='<span class="z">Add items to begin</span>'; lbl.textContent='Your arrangements'; next.disabled=true; }
+    else { num.textContent=n+(n===1?' arrangement':' arrangements'); lbl.textContent='Selected'; next.disabled=false; }
+  }
+  function restart(){
+    CATS.forEach(function(c){ c.pieces.forEach(function(p){ p.qty=0; }); });
+    palette={}; touched={}; amounts={}; removed={}; overrides={}; additions={}; alacarte=[]; openArrs={}; closedCats={}; leadEmail=null; leadName=null;
+    try{ localStorage.removeItem(SKEY); }catch(e){}
+    renderSections(); setStep(1);
+  }
+
+  document.getElementById('nextBtn').addEventListener('click',function(){ if(this.disabled) return; setStep(Math.min(3,step+1)); });
+  document.getElementById('backBtn').addEventListener('click',function(){ if(step>1){ setStep(Math.max(1,step-1)); } else { history.back(); } });
+  root.querySelectorAll('.stepdot').forEach(function(d){ d.addEventListener('click',function(){
+    var target=+d.getAttribute('data-step');
+    var hasPieces=false; selectedPieces().forEach(function(p){ if(p.qty>0) hasPieces=true; });
+    if(target>1 && !hasPieces) return; // can't advance past step 1 until something is picked
+    if(target>maxReached) return; // can't skip ahead (must go through step 2 before step 3); back is always allowed
+    setStep(target);
+  }); });
+
+  var _saved=loadState();
+  renderSections();
+
+  var PRESETS = {
+    small:  { 'bridal-bouquet':1, 'bridesmaid-bouquet':2, 'boutonniere':2, 'cp-small':4 },
+    medium: { 'bridal-bouquet':1, 'bridesmaid-bouquet':3, 'boutonniere':4, 'corsage':2, 'cp-medium':8 },
+    large:  { 'bridal-bouquet':1, 'bridesmaid-bouquet':5, 'boutonniere':5, 'corsage':2, 'cp-large':12, 'aisle-statement':2 }
+  };
+  function applyPreset(name){
+    var pre=PRESETS[name]; if(!pre) return;
+    CATS.forEach(function(c){ c.pieces.forEach(function(x){ x.qty = pre[x.id]||0; }); });
+    renderSections(); updateBar(); saveState();
+    root.querySelectorAll('.qscard').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-preset')===name); });
+    var first=document.getElementById('sections'); if(first){ window.scrollTo({ top:first.getBoundingClientRect().top+window.scrollY-90, behavior:'smooth' }); }
+  }
+  root.querySelectorAll('.qscard').forEach(function(b){ b.addEventListener('click',function(e){ e.stopPropagation(); applyPreset(b.getAttribute('data-preset')); var t=root.querySelector('.qstrig'); if(t){ t.classList.remove('on'); t.blur(); } }); });
+  var _qtrig=root.querySelector('.qstrig');
+  if(_qtrig){ _qtrig.addEventListener('click',function(e){ e.stopPropagation(); _qtrig.classList.toggle('on'); }); }
+
+  root.addEventListener('click',function(e){ if(!e.target.closest('.help')) root.querySelectorAll('.help.on').forEach(function(x){ x.classList.remove('on'); }); if(!e.target.closest('.qstrig')){ var t=root.querySelector('.qstrig'); if(t) t.classList.remove('on'); } });
+  setStep(_saved && _saved.qty && Object.keys(_saved.qty).length ? (_saved.step||1) : 1);
+})();
+</script>
+</body>
+</html>
