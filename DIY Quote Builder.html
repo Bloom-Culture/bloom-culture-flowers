@@ -490,6 +490,123 @@
 </div>
 
 <script src="quote-recipes.js"></script>
+
+<!-- ================================================================
+     BLOOM CULTURE QUOTE BUILDER — SHOPIFY INTEGRATION BLOCK
+     Integration 1: Live Shopify Price / Name / Photo Sync
+     ----------------------------------------------------------------
+     DO NOT PASTE DESIGN UPDATES OVER THIS BLOCK.
+     If Alison sends a new version of the builder HTML, paste only
+     the <style> tag and the main <script> below this block.
+     Keep this block exactly as-is between updates.
+     ================================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Config ─────────────────────────────────────────────────────────── */
+  var STORE   = 'bloomcultureflowers.myshopify.com';
+  var TOKEN   = '7647aa570778a61f0a7257a92d5a8413'; // Public Storefront token (safe client-side)
+  var API_URL = 'https://' + STORE + '/api/2024-10/graphql.json';
+
+  /* ── Shared registries (Integration 2 reads these for add-to-cart) ─── */
+  window.BCF_PHOTOS      = window.BCF_PHOTOS      || {}; // flowerName → image URL
+  window.BCF_VARIANT_IDS = window.BCF_VARIANT_IDS || {}; // flowerName → Shopify variant GID
+
+  /* ── GraphQL query ──────────────────────────────────────────────────── */
+  var QUERY = [
+    '{ products(first: 250, query: "metafield:custom.bcf_role:*") {',
+    '    edges { node {',
+    '      title handle',
+    '      variants(first: 1) { edges { node { id price { amount } } } }',
+    '      images(first: 2) { edges { node { url } } }',
+    '      bcf_role:  metafield(namespace:"custom", key:"bcf_role")  { value }',
+    '      bcf_stems: metafield(namespace:"custom", key:"bcf_stems_per_bunch") { value }',
+    '      bcf_image: metafield(namespace:"custom", key:"bcf_quote_image") {',
+    '        reference { ... on MediaImage { image { url } } }',
+    '      }',
+    '    } }',
+    '  }',
+    '}'
+  ].join(' ');
+
+  /* ── Normalise product names for fuzzy matching ─────────────────────── */
+  function norm(s) { return String(s).toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+  /* ── Sync ───────────────────────────────────────────────────────────── */
+  fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': TOKEN
+    },
+    body: JSON.stringify({ query: QUERY })
+  })
+  .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+  .then(function (json) {
+    if (!json || !json.data || !json.data.products) return;
+
+    /* Build normalised-name → shopify data lookup */
+    var shopMap = {};
+    json.data.products.edges.forEach(function (edge) {
+      var node    = edge.node;
+      var role    = node.bcf_role && node.bcf_role.value;
+      if (!role) return; // skip products not yet configured for the builder
+
+      var variant = node.variants.edges[0] && node.variants.edges[0].node;
+      if (!variant) return;
+
+      var imgs    = node.images.edges.map(function (e) { return e.node.url; });
+      var imgMeta = node.bcf_image && node.bcf_image.reference && node.bcf_image.reference.image;
+      /* Fallback: bcf_quote_image → 2nd gallery image → featured image */
+      var image   = imgMeta ? imgMeta.url : (imgs[1] || imgs[0] || null);
+
+      shopMap[norm(node.title)] = {
+        name:      node.title,
+        role:      role,
+        bunch:     parseFloat(variant.price.amount),
+        stems:     node.bcf_stems && node.bcf_stems.value ? parseInt(node.bcf_stems.value, 10) : null,
+        variantId: variant.id,   // gid://shopify/ProductVariant/…  (needed for add-to-cart)
+        image:     image
+      };
+    });
+
+    /* Patch existing BCF_PRODUCTS in-place with live prices, stems & images */
+    var synced = 0;
+    (window.BCF_PRODUCTS || []).forEach(function (p) {
+      var hit = shopMap[norm(p.name)];
+      if (!hit) return;
+      p.bunch = hit.bunch;
+      if (hit.stems)  p.stems = hit.stems;
+      if (hit.image)  window.BCF_PHOTOS[p.name] = hit.image;
+      window.BCF_VARIANT_IDS[p.name] = hit.variantId;
+      synced++;
+    });
+
+    /* Add any Shopify products not yet in the static list (future-proofing) */
+    var existing = {};
+    (window.BCF_PRODUCTS || []).forEach(function (p) { existing[norm(p.name)] = true; });
+    Object.keys(shopMap).forEach(function (key) {
+      if (existing[key]) return;
+      var hit = shopMap[key];
+      window.BCF_PRODUCTS.push({ name: hit.name, role: hit.role, bunch: hit.bunch, stems: hit.stems || 10 });
+      if (hit.image) window.BCF_PHOTOS[hit.name] = hit.image;
+      window.BCF_VARIANT_IDS[hit.name] = hit.variantId;
+    });
+
+    window.BCF_SHOPIFY_SYNCED = true;
+    console.info('[BCF] Shopify sync complete — ' + synced + ' products matched.');
+  })
+  .catch(function (err) {
+    /* Non-blocking — builder continues with static data from quote-recipes.js */
+    console.warn('[BCF] Shopify sync failed, using static data.', err);
+  });
+})();
+</script>
+<!-- ================================================================
+     END SHOPIFY INTEGRATION BLOCK
+     ================================================================ -->
+
 <script>
 (function(){
   var root = document.getElementById('bcf-quote');
