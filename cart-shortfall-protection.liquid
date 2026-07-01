@@ -1,0 +1,65 @@
+{% comment %}
+  Bloom Culture Flowers — Shortfall Protection Script
+  This script listens for quantity changes in the cart. If a customer reduces the quantity of a 
+  Quote Builder item below its recommended amount (stored in `_bcf_recommended_qty`), it pops up an alert.
+{% endcomment %}
+<script>
+  (function() {
+    // Only run on the cart page
+    if (window.location.pathname.indexOf('/cart') !== 0) return;
+
+    var warnedLines = {};
+
+    function checkQuantities() {
+      fetch('/cart.js')
+        .then(function(res) { return res.json(); })
+        .then(function(cart) {
+          (cart.items || []).forEach(function(item) {
+            var recQtyStr = item.properties && item.properties['_bcf_recommended_qty'];
+            if (!recQtyStr) return;
+            
+            var recQty = parseInt(recQtyStr, 10);
+            if (item.quantity > 0 && item.quantity < recQty) {
+              if (!warnedLines[item.key]) {
+                warnedLines[item.key] = true;
+                alert("Your cart is based on the recommended quantities from your Build Your Own Package recipes, designed to give you everything you need. If you change these amounts, your results may differ from the recipes, and we will not be held responsible for adjustments that deviate from our recommendations.");
+              }
+            }
+          });
+        })
+        .catch(function(err) { console.error('[BCF] Error checking cart quantities:', err); });
+    }
+
+    // Initial check on load
+    checkQuantities();
+
+    // Hook into Fetch API to intercept Shopify AJAX cart updates
+    var origFetch = window.fetch;
+    window.fetch = function() {
+      var req = arguments[0];
+      var url = (typeof req === 'string') ? req : (req && req.url);
+      var p = origFetch.apply(this, arguments);
+      
+      if (url && (url.indexOf('/cart/change') > -1 || url.indexOf('/cart/update') > -1)) {
+        p.then(function(res) {
+          // Re-check quantities after a slight delay to let the theme finish rendering
+          setTimeout(checkQuantities, 500);
+          return res;
+        });
+      }
+      return p;
+    };
+    
+    // Also hook XMLHttpRequest (if the theme uses jQuery.ajax for cart changes)
+    var origOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function() {
+      var url = arguments[1];
+      this.addEventListener('load', function() {
+        if (url && (url.indexOf('/cart/change') > -1 || url.indexOf('/cart/update') > -1)) {
+          setTimeout(checkQuantities, 500);
+        }
+      });
+      origOpen.apply(this, arguments);
+    };
+  })();
+</script>

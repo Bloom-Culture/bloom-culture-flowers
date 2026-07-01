@@ -1103,7 +1103,82 @@
       var elb=document.getElementById('emailLaterBtn'); if(elb) elb.classList.remove('on');
     }); }
     bindLeadForm();
-    var cb=document.getElementById('cartBtn'); if(cb) cb.addEventListener('click',function(){ var sl=document.getElementById('softLead'); if(sl) sl.innerHTML='<span class="slnote">Checkout is being connected. For now, email it to yourself or have us tailor it, and we\u2019ll take it from there.</span>'; });
+    /* === BLOOM CULTURE INTEGRATION CODE — DO NOT OVERWRITE === */
+    var cb = document.getElementById('cartBtn');
+    if (cb) cb.addEventListener('click', function() {
+      var btn = this;
+      if (btn.disabled) return;
+      btn.disabled = true;
+      btn.innerHTML = 'Adding to cart...';
+
+      var demand={}, order=[];
+      selectedPieces().forEach(function(p){ var mult=(p.mult||1)*p.qty; p.recipe.forEach(function(sl,i){ if(isOpt(sl) && removed[p.id]&&removed[p.id][i])return; var fl=slotFlower(p,i); var pr=prod(fl); if(!pr)return; var u=amounts[p.id][i]; var bu=sl[2]==='b'?u:u/pr.stems; if(!demand[fl]){demand[fl]={bu:0};order.push(fl);} demand[fl].bu+=bu*mult; }); (additions[p.id]||[]).forEach(function(a){ var pr=prod(a.name); if(!pr)return; var bu=a.unit==='b'?a.amt:a.amt/pr.stems; if(!demand[a.name]){demand[a.name]={bu:0};order.push(a.name);} demand[a.name].bu+=bu*mult; }); });
+      alacarte.forEach(function(a){ var pr=prod(a.name); if(!pr)return; if(!demand[a.name]){demand[a.name]={bu:0};order.push(a.name);} demand[a.name].bu+=a.bunches; });
+      
+      var itemsToAdd = [];
+      order.forEach(function(fl){ 
+        var b = Math.max(1, Math.ceil(demand[fl].bu - 1e-9)); 
+        var gid = window.BCF_VARIANT_IDS && window.BCF_VARIANT_IDS[fl];
+        if(!gid) return;
+        var numId = parseInt(gid.split('/').pop(), 10);
+        if(!numId) return;
+        itemsToAdd.push({ id: numId, quantity: b, properties: { '_bcf_source': 'builder', '_bcf_recommended_qty': b } });
+      });
+
+      if(!itemsToAdd.length) {
+        btn.disabled = false;
+        btn.innerHTML = 'Add my flowers to cart &#8594;';
+        return;
+      }
+
+      var summaryText = buildSummary().pieces.join('\n');
+
+      fetch('/cart.js')
+        .then(function(res){ return res.json(); })
+        .then(function(cart) {
+          var updates = {};
+          var oldFound = false;
+          (cart.items || []).forEach(function(item) {
+            if (item.properties && item.properties['_bcf_source'] === 'builder') {
+              updates[item.key] = 0;
+              oldFound = true;
+            }
+          });
+
+          var clearPromise = Promise.resolve();
+          if (oldFound) {
+            clearPromise = fetch('/cart/update.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ updates: updates })
+            });
+          }
+
+          return clearPromise.then(function() {
+            return fetch('/cart/update.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ attributes: { 'DIY Recipe Plan': summaryText } })
+            });
+          });
+        })
+        .then(function() {
+          return fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: itemsToAdd })
+          });
+        })
+        .then(function() {
+          window.location.href = '/cart';
+        })
+        .catch(function(err) {
+          console.error('[BCF] Cart error:', err);
+          btn.disabled = false;
+          btn.innerHTML = 'Add my flowers to cart &#8594;';
+        });
+    });
+    /* === END BLOOM CULTURE INTEGRATION CODE === */
     var tb=document.getElementById('tailorBtn'); if(tb) tb.addEventListener('click',openTailor);
     document.getElementById('restartBtn').addEventListener('click',restart);
     recompute();
