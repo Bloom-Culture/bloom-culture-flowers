@@ -1,0 +1,4 @@
+project_id = "mvrcmtbvfvmigjloxcva"
+
+[functions.quote-email]
+verify_jwt = false   # public endpoint — the builder calls it from the browser

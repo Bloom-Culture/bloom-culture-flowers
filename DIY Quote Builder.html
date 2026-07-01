@@ -1091,7 +1091,13 @@
       if(v.toLowerCase()!==v2.toLowerCase()){ if(le) le.textContent='Those emails don\u2019t match \u2014 please double-check.'; document.getElementById('leadEmail2').focus(); return; }
       if(le) le.textContent='';
       leadName=nm; leadEmail=v;
-      /* TODO(Kirunda): POST {name:leadName, email:leadEmail, order:buildSummary()} to your email tool (Flodesk) + send the plan (greet them by leadName). */
+      /* === BLOOM CULTURE INTEGRATION CODE — DO NOT OVERWRITE === */
+      fetch('https://mvrcmtbvfvmigjloxcva.supabase.co/functions/v1/quote-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12cmNtdGJ2ZnZtaWdqbG94Y3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MTMxMTMsImV4cCI6MjA5NjA4OTExM30.eJrX0esqVIXST_-xY5D-XYBF8fHQwYkbp_qylqlDEWg'},
+        body:JSON.stringify({type:'lead',name:leadName,email:leadEmail,order:buildSummary()})
+      }).catch(function(err){ console.warn('[BCF] Lead email failed:',err); });
+      /* === END BLOOM CULTURE INTEGRATION CODE === */
       saveState();
       var sl=document.getElementById('softLead'); if(sl) sl.innerHTML='<span class="slok">&#10003; Sent to '+leadEmail+'. It’s in your inbox, ready when you are.</span>';
       var elb=document.getElementById('emailLaterBtn'); if(elb) elb.classList.remove('on');
@@ -1170,7 +1176,13 @@
       if(!needs.length){ document.querySelector('.tlr-needs').scrollIntoView({block:'center'}); document.querySelector('.tlr-needs').classList.add('flash'); return; }
       if(!noteVal){ noteEl.focus(); return; }
       var payload={ name:document.getElementById('tlrName').value, email:em, weddingDate:document.getElementById('tlrDate').value, colors:document.getElementById('tlrColors').value, budget:bdg.value, needs:needs, note:noteVal, summary:sum };
-      /* TODO(Kirunda): (1) email `payload` to quotes@bloomcultureflowers.com as a Tailor Request (see "Tailor Request (sample).html" for the layout). (2) Send the couple a confirmation copy of their request to `payload.email` (same details + their build). (3) Save the lead to Flodesk. */
+      /* === BLOOM CULTURE INTEGRATION CODE — DO NOT OVERWRITE === */
+      fetch('https://mvrcmtbvfvmigjloxcva.supabase.co/functions/v1/quote-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12cmNtdGJ2ZnZtaWdqbG94Y3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MTMxMTMsImV4cCI6MjA5NjA4OTExM30.eJrX0esqVIXST_-xY5D-XYBF8fHQwYkbp_qylqlDEWg'},
+        body:JSON.stringify({type:'tailor',name:payload.name,email:payload.email,weddingDate:payload.weddingDate,colors:payload.colors,budget:payload.budget,needs:payload.needs,note:payload.note,summary:payload.summary})
+      }).catch(function(err){ console.warn('[BCF] Tailor email failed:',err); });
+      /* === END BLOOM CULTURE INTEGRATION CODE === */
       document.getElementById('tlrForm').style.display='none';
       var d=document.querySelector('#bcfTailor .tlr-sum'); if(d) d.style.display='none';
       var lead=document.querySelector('#bcfTailor .tlr-lead'); if(lead) lead.style.display='none';
