@@ -319,7 +319,7 @@ function tailorCopyHtml(p: TailorBody): string {
           <span style="font-family:'Georgia',serif;font-weight:600;font-size:28px;">${money(p.summary.total)}</span>
         </div>
         <div style="font-size:11px;font-weight:700;color:#f7f6f0;opacity:.7;margin-top:9px;padding-top:9px;border-top:1px solid rgba(247,246,240,.18);">
-          ⚠️ Prices are estimates only and may change based on tailoring, availability, and market rates at time of order.
+          Prices are estimates only and may change based on tailoring, availability, and market rates at time of order.
         </div>
       </div>
 
@@ -388,13 +388,61 @@ async function sendEmail(opts: {
   }
 }
 
+/* ── Send to Flodesk ───────────────────────────────────────────────────────── */
+async function saveToFlodesk(email: string, name: string) {
+  const apiKey = Deno.env.get("FLODESK_API_KEY");
+  if (!apiKey) return;
+
+  const firstName = (name ?? "").split(" ")[0];
+  const lastName = (name ?? "").substring(firstName.length).trim();
+
+  try {
+    const res = await fetch("https://api.flodesk.com/v1/subscribers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Basic ${btoa(apiKey + ":")}`
+      },
+      body: JSON.stringify({
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+        status: "active"
+      })
+    });
+    if (!res.ok) console.error("[Flodesk] Error:", await res.text());
+  } catch (err) {
+    console.error("[Flodesk] Fetch Error:", err);
+  }
+}
+
+/* ── Send to Zapier / FlowerBuddy ────────────────────────────────────────── */
+async function pushToZapier(payload: any) {
+  const webhookUrl = Deno.env.get("ZAPIER_WEBHOOK_URL");
+  if (!webhookUrl) return;
+
+  try {
+    const res = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) console.error("[Zapier] Error:", await res.text());
+  } catch (err) {
+    console.error("[Zapier] Fetch Error:", err);
+  }
+}
+
 /* ── Handlers ────────────────────────────────────────────────────────────── */
 async function handleLead(body: LeadBody) {
-  await sendEmail({
-    to: body.email,
-    subject: "Your DIY flower quote is saved 🌸",
-    html: planHtml(body.name, body.order),
-  });
+  await Promise.all([
+    sendEmail({
+      to: body.email,
+      subject: "Your DIY flower quote is saved 🌸",
+      html: planHtml(body.name, body.order),
+    }),
+    saveToFlodesk(body.email, body.name)
+  ]);
 }
 
 async function handleTailor(body: TailorBody) {
@@ -419,11 +467,11 @@ async function handleTailor(body: TailorBody) {
       subject: `Your tailor request is on its way, ${firstName} 🌿`,
       html: tailorCopyHtml(body),
     }),
+    // 3. Save the lead
+    saveToFlodesk(body.email, body.name),
+    // 4. Push event/proposal to Zapier -> FlowerBuddy
+    pushToZapier(body)
   ]);
-
-  // TODO (Integration 5): Push to FlowerBuddy
-  // const FB_KEY = Deno.env.get("FLOWERBUDDY_API_KEY");
-  // if (FB_KEY) { ... POST /v1/events/ with recipe in the `notes` field ... }
 }
 
 /* ── Main ────────────────────────────────────────────────────────────────── */
