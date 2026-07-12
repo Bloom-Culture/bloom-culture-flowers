@@ -19,7 +19,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 /* ── Config ──────────────────────────────────────────────────────────────── */
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY")!;
-const FROM       = Deno.env.get("RESEND_FROM") || "onboarding@resend.dev";
+const FROM       = Deno.env.get("RESEND_FROM") || "quotes@bloomcultureflowers.com";
 const TAILOR_TO  = "quotes@bloomcultureflowers.com";
 const RESEND_URL = "https://api.resend.com/emails";
 
