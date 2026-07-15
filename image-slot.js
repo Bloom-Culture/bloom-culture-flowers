@@ -563,6 +563,12 @@
         let url = await toDataUrl(file, w);
         if (gen !== this._gen) return;
 
+        // Optimistic UI update: show the image instantly before uploading
+        this._exitReframe(false);
+        const val = { u: url, s: 1, x: 0, y: 0 };
+        setSlot(this.id || '', val);
+        if (!this.id) { this._local = val; this._render(); }
+
         const supabase = window.BC_SUPABASE_CLIENT;
         if (supabase && customerId && this.id) {
           const blob = dataURLtoBlob(url);
@@ -579,17 +585,16 @@
           const { data: urlData } = supabase.storage
             .from('planner-images')
             .getPublicUrl(filePath);
-          url = urlData.publicUrl;
+          
+          // Silently update the URL to the remote one in the background
+          if (gen === this._gen) {
+            const currentSlot = getSlot(this.id);
+            if (currentSlot && currentSlot.u === url) {
+              currentSlot.u = urlData.publicUrl;
+              setSlot(this.id, currentSlot);
+            }
+          }
         }
-
-        // Only exit reframe once the new image is in hand — a rejected type
-        // or decode failure leaves the in-progress crop untouched.
-        this._exitReframe(false);
-        const val = { u: url, s: 1, x: 0, y: 0 };
-        setSlot(this.id || '', val);
-        // Keep a session-local copy for id-less slots so the drop still
-        // shows, even though it cannot persist.
-        if (!this.id) { this._local = val; this._render(); }
       } catch (err) {
         if (gen !== this._gen) return;
         this._setError('Could not read or upload that image.');
