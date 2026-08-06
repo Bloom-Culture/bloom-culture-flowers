@@ -66,6 +66,26 @@ function money(n: number): string {
   return "$" + Math.round(n).toLocaleString("en-US");
 }
 
+function formatDate(raw: unknown): string {
+  if (!raw) return "—";
+  const s = String(raw).trim();
+  if (!s) return "—";
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    const d = new Date(s + "T00:00:00");
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+  }
+
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  return s;
+}
+
 /**
  * Parse the plain-text `pieces` array from buildSummary() into branded HTML.
  *  - Empty lines        → skipped
@@ -214,9 +234,7 @@ function planHtml(name: string, order: Summary): string {
 
 /** Integration 4: Internal tailor-request email sent to Alison */
 function tailorInternalHtml(p: TailorBody): string {
-  const dateStr = p.weddingDate
-    ? new Date(p.weddingDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : p.weddingDate;
+  const dateStr = formatDate(p.weddingDate);
   const needsTags = (p.needs ?? [])
     .map((n) =>
       `<span style="background:#fff;border:1.5px solid #aa2138;color:#8c1a2e;font-size:13px;font-weight:600;border-radius:999px;padding:7px 14px;">${esc(n)}</span>`
@@ -291,9 +309,7 @@ function tailorInternalHtml(p: TailorBody): string {
 /** Integration 4: Customer confirmation copy */
 function tailorCopyHtml(p: TailorBody): string {
   const firstName = (p.name ?? "").split(" ")[0];
-  const dateStr = p.weddingDate
-    ? new Date(p.weddingDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : p.weddingDate;
+  const dateStr = formatDate(p.weddingDate);
 
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
 <title>Your tailor request — Bloom Culture</title></head>
@@ -447,11 +463,7 @@ async function handleLead(body: LeadBody) {
 
 async function handleTailor(body: TailorBody) {
   const firstName = (body.name ?? "").split(" ")[0];
-  const dateStr   = body.weddingDate
-    ? new Date(body.weddingDate + "T00:00:00").toLocaleDateString("en-US", {
-        month: "short", day: "numeric", year: "numeric",
-      })
-    : body.weddingDate;
+  const dateStr   = formatDate(body.weddingDate);
 
   await Promise.all([
     // 1. Internal request to Alison
