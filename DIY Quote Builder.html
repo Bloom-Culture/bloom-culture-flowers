@@ -183,6 +183,21 @@
   #bcf-quote #tlrForm input:focus, #bcf-quote #tlrForm select:focus, #bcf-quote #tlrForm textarea:focus{ outline:none; border-color:var(--rose); }
   #bcf-quote .tlr-send{ border:0; border-radius:999px; background:var(--rose); color:#fff; font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:.03em; padding:14px; cursor:pointer; }
   #bcf-quote .tlr-send:hover{ background:var(--rose-deep); }
+  /* tailor vision upload */
+  #bcf-quote .tlr-upload-box{ border:1.5px dashed var(--line-strong); border-radius:12px; padding:14px 16px; background:var(--cream); text-align:center; cursor:pointer; transition:border-color .15s, background .15s; margin-top:4px; }
+  #bcf-quote .tlr-upload-box:hover, #bcf-quote .tlr-upload-box.dragover{ border-color:var(--rose); background:var(--rose-tint); }
+  #bcf-quote .tlr-upload-icon{ font-size:20px; color:var(--rose); margin-bottom:2px; }
+  #bcf-quote .tlr-upload-txt{ font-size:13px; font-weight:600; color:var(--ink); }
+  #bcf-quote .tlr-upload-sub{ font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
+  #bcf-quote .tlr-thumbs{ display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:10px; margin-top:8px; }
+  #bcf-quote .tlr-thumb-card{ position:relative; background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px; display:flex; align-items:center; gap:8px; overflow:hidden; }
+  #bcf-quote .tlr-thumb-img{ width:42px; height:42px; border-radius:6px; object-fit:cover; flex-shrink:0; background:var(--cream-deep); }
+  #bcf-quote .tlr-thumb-info{ flex:1; min-width:0; }
+  #bcf-quote .tlr-thumb-name{ font-size:11px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #bcf-quote .tlr-thumb-size{ font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); margin-top:1px; }
+  #bcf-quote .tlr-thumb-del{ border:0; background:rgba(170,33,56,.1); color:var(--rose); width:22px; height:22px; border-radius:50%; display:grid; place-items:center; font-size:14px; font-weight:700; cursor:pointer; flex-shrink:0; transition:background .12s, color .12s; }
+  #bcf-quote .tlr-thumb-del:hover{ background:var(--rose); color:#fff; }
+
   #bcf-quote .tlr-sum{ margin-top:14px; }
   #bcf-quote .tlr-sum summary{ cursor:pointer; font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); }
   #bcf-quote .tlr-sum pre{ white-space:pre-wrap; font-family:var(--sans); font-size:12.5px; line-height:1.5; color:var(--ink); background:var(--cream-deep); border-radius:10px; padding:12px; margin-top:8px; }
@@ -1230,40 +1245,185 @@
             '<label class="tlr-ck"><input type="checkbox" class="tlrNeed" value="Overall guidance, I am not sure" /><span>Overall guidance, I’m not sure where to start</span></label>'+
           '</div>'+
           '<label class="tlr-f"><span>Tell us exactly what you need tailored *</span><textarea id="tlrNote" rows="3" required placeholder="What is not working, what you want changed, must-have or skip flowers, quantities, specific pieces..."></textarea></label>'+
+          '<div class="tlr-f"><span>Help us better understand your vision or what you need</span>'+
+            '<input type="file" id="tlrFileInput" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple style="display:none;" />'+
+            '<div class="tlr-upload-box" id="tlrDropzone">'+
+              '<div class="tlr-upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg></div>'+
+              '<div class="tlr-upload-txt">Upload inspiration photos or vision board</div>'+
+
+              '<div class="tlr-upload-sub">Click or drag up to 3 photos (JPG, PNG, HEIC, max 10MB each)</div>'+
+            '</div>'+
+            '<div class="tlr-thumbs" id="tlrThumbGrid"></div>'+
+          '</div>'+
           '<div class="tlr-err" id="tlrErr"></div>'+
-          '<button type="submit" class="tlr-send">Send my plan to your florists</button>'+
+          '<button type="submit" class="tlr-send" id="tlrSubmitBtn">Send my plan to your florists</button>'+
         '</form>'+
         '<div id="tlrOk"></div>'+
       '</div></div>';
     m.classList.add('on');
+    var dateEl = document.getElementById('tlrDate');
+    if(dateEl && dateEl.type === 'date'){ dateEl.min = new Date().toISOString().split('T')[0]; }
+
+    var tlrSelectedFiles = [];
+    var tlrFileInput = document.getElementById('tlrFileInput');
+    var tlrDropzone = document.getElementById('tlrDropzone');
+    var tlrThumbGrid = document.getElementById('tlrThumbGrid');
+    var tlrErr = document.getElementById('tlrErr');
+
+    function renderTlrThumbs() {
+      if(!tlrThumbGrid) return;
+      tlrThumbGrid.innerHTML = '';
+      tlrSelectedFiles.forEach(function(file, idx) {
+        var card = document.createElement('div');
+        card.className = 'tlr-thumb-card';
+        var imgUrl = URL.createObjectURL(file);
+        var sizeMB = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+        card.innerHTML = 
+          '<img src="' + imgUrl + '" class="tlr-thumb-img" alt="preview" />' +
+          '<div class="tlr-thumb-info">' +
+            '<div class="tlr-thumb-name">' + esc(file.name) + '</div>' +
+            '<div class="tlr-thumb-size">' + sizeMB + '</div>' +
+          '</div>' +
+          '<button type="button" class="tlr-thumb-del" data-idx="' + idx + '" title="Remove">&times;</button>';
+        tlrThumbGrid.appendChild(card);
+      });
+      tlrThumbGrid.querySelectorAll('.tlr-thumb-del').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var i = parseInt(btn.getAttribute('data-idx'), 10);
+          tlrSelectedFiles.splice(i, 1);
+          renderTlrThumbs();
+        });
+      });
+    }
+
+    function addTlrFiles(files) {
+      if (tlrErr) tlrErr.textContent = '';
+      for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        if (tlrSelectedFiles.length >= 3) {
+          if (tlrErr) tlrErr.textContent = 'You can upload up to 3 inspiration photos maximum.';
+          break;
+        }
+        if (f.size > 10 * 1024 * 1024) {
+          if (tlrErr) tlrErr.textContent = 'File "' + f.name + '" exceeds the 10MB limit.';
+          continue;
+        }
+        tlrSelectedFiles.push(f);
+      }
+      renderTlrThumbs();
+    }
+
+    if (tlrDropzone && tlrFileInput) {
+      tlrDropzone.addEventListener('click', function() { tlrFileInput.click(); });
+      tlrFileInput.addEventListener('change', function() {
+        if (tlrFileInput.files) addTlrFiles(Array.from(tlrFileInput.files));
+        tlrFileInput.value = '';
+      });
+      tlrDropzone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        tlrDropzone.classList.add('dragover');
+      });
+      ['dragleave', 'dragend'].forEach(function(evt) {
+        tlrDropzone.addEventListener(evt, function() { tlrDropzone.classList.remove('dragover'); });
+      });
+      tlrDropzone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        tlrDropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files) addTlrFiles(Array.from(e.dataTransfer.files));
+      });
+    }
+
     document.getElementById('tlrX').addEventListener('click',function(){ m.classList.remove('on'); });
     document.getElementById('tlrForm').addEventListener('submit',function(e){ e.preventDefault();
+      var submitBtn = document.getElementById('tlrSubmitBtn');
       var em=(document.getElementById('tlrEmail').value||'').trim();
       var teErr=document.getElementById('tlrErr');
+      if (teErr) teErr.textContent = '';
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ if(teErr) teErr.textContent='Please enter a valid email address.'; document.getElementById('tlrEmail').focus(); return; }
       var em2=(document.getElementById('tlrEmail2').value||'').trim();
       if(em.toLowerCase()!==em2.toLowerCase()){ if(teErr) teErr.textContent='Those emails don\u2019t match \u2014 please double-check.'; document.getElementById('tlrEmail2').focus(); return; }
-      if(teErr) teErr.textContent='';
       var dateEl=document.getElementById('tlrDate'); if(!(dateEl.value||'').trim()){ dateEl.focus(); return; }
       var bdg=document.getElementById('tlrBudget'); if(!bdg.value){ bdg.focus(); return; }
       var needs=[].slice.call(document.querySelectorAll('.tlrNeed:checked')).map(function(c){return c.value;});
       var noteEl=document.getElementById('tlrNote'); var noteVal=(noteEl.value||'').trim();
       if(!needs.length){ document.querySelector('.tlr-needs').scrollIntoView({block:'center'}); document.querySelector('.tlr-needs').classList.add('flash'); return; }
       if(!noteVal){ noteEl.focus(); return; }
-      var payload={ name:document.getElementById('tlrName').value, email:em, weddingDate:document.getElementById('tlrDate').value, colors:document.getElementById('tlrColors').value, budget:bdg.value, needs:needs, note:noteVal, summary:sum };
-      /* === BLOOM CULTURE INTEGRATION CODE — DO NOT OVERWRITE === */
-      fetch('https://mvrcmtbvfvmigjloxcva.supabase.co/functions/v1/quote-email',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12cmNtdGJ2ZnZtaWdqbG94Y3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MTMxMTMsImV4cCI6MjA5NjA4OTExM30.eJrX0esqVIXST_-xY5D-XYBF8fHQwYkbp_qylqlDEWg'},
-        body:JSON.stringify({type:'tailor',name:payload.name,email:payload.email,weddingDate:payload.weddingDate,colors:payload.colors,budget:payload.budget,needs:payload.needs,note:payload.note,summary:payload.summary})
-      }).catch(function(err){ console.warn('[BCF] Tailor email failed:',err); });
-      /* === END BLOOM CULTURE INTEGRATION CODE === */
-      document.getElementById('tlrForm').style.display='none';
-      var d=document.querySelector('#bcfTailor .tlr-sum'); if(d) d.style.display='none';
-      var lead=document.querySelector('#bcfTailor .tlr-lead'); if(lead) lead.style.display='none';
-      var ttl=document.querySelector('#bcfTailor .vgal-title'); if(ttl) ttl.textContent='';
-      document.getElementById('tlrOk').innerHTML='<div class="tlr-okmsg"><img class="tlr-oklogo" src="https://cdn.shopify.com/s/files/1/0750/7984/4147/files/bcf_favicon.png?v=1765476178" alt="Bloom Culture" /><span class="tlr-okhead">Your request is on its way.</span><span class="tlr-oksub">We’ve got everything you built, and a copy will be sent to your inbox. We’ll be in touch soon with your tailored quote.</span></div>';
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = tlrSelectedFiles.length ? 'Uploading vision photos...' : 'Sending request...';
+      }
+
+      var supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12cmNtdGJ2ZnZtaWdqbG94Y3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MTMxMTMsImV4cCI6MjA5NjA4OTExM30.eJrX0esqVIXST_-xY5D-XYBF8fHQwYkbp_qylqlDEWg';
+      var uploadPromises = tlrSelectedFiles.map(function(file, idx) {
+        var cleanName = 'tailor_' + Date.now() + '_' + idx + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        var uploadUrl = 'https://mvrcmtbvfvmigjloxcva.supabase.co/storage/v1/object/planner-images/tailor-inspirations/' + cleanName;
+        var cdnUrl = 'https://mvrcmtbvfvmigjloxcva.supabase.co/storage/v1/object/public/planner-images/tailor-inspirations/' + cleanName;
+
+        return fetch(uploadUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + supabaseAnonKey,
+            'Content-Type': file.type || 'application/octet-stream'
+          },
+          body: file
+        }).then(function(res) {
+          if (!res.ok) throw new Error('Failed to upload file ' + file.name);
+          return cdnUrl;
+        });
+      });
+
+      Promise.all(uploadPromises).then(function(imageUrls) {
+        if (submitBtn) submitBtn.textContent = 'Sending request...';
+        var payload = {
+          name: document.getElementById('tlrName').value,
+          email: em,
+          weddingDate: document.getElementById('tlrDate').value,
+          colors: document.getElementById('tlrColors').value,
+          budget: bdg.value,
+          needs: needs,
+          note: noteVal,
+          imageUrls: imageUrls,
+          summary: sum
+        };
+
+        /* === BLOOM CULTURE INTEGRATION CODE — DO NOT OVERWRITE === */
+        return fetch('https://mvrcmtbvfvmigjloxcva.supabase.co/functions/v1/quote-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + supabaseAnonKey
+          },
+          body: JSON.stringify({
+            type: 'tailor',
+            name: payload.name,
+            email: payload.email,
+            weddingDate: payload.weddingDate,
+            colors: payload.colors,
+            budget: payload.budget,
+            needs: payload.needs,
+            note: payload.note,
+            imageUrls: payload.imageUrls,
+            summary: payload.summary
+          })
+        });
+      }).then(function() {
+        document.getElementById('tlrForm').style.display = 'none';
+        var d = document.querySelector('#bcfTailor .tlr-sum'); if (d) d.style.display = 'none';
+        var lead = document.querySelector('#bcfTailor .tlr-lead'); if (lead) lead.style.display = 'none';
+        var ttl = document.querySelector('#bcfTailor .vgal-title'); if (ttl) ttl.textContent = '';
+        document.getElementById('tlrOk').innerHTML = '<div class="tlr-okmsg"><img class="tlr-oklogo" src="https://cdn.shopify.com/s/files/1/0750/7984/4147/files/bcf_favicon.png?v=1765476178" alt="Bloom Culture" /><span class="tlr-okhead">Your request is on its way.</span><span class="tlr-oksub">We’ve got everything you built, and a copy will be sent to your inbox. We’ll be in touch soon with your tailored quote.</span></div>';
+      }).catch(function(err) {
+        console.warn('[BCF] Tailor request failed:', err);
+        if (teErr) teErr.textContent = 'Upload or submission failed. Please try again.';
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send my plan to your florists';
+        }
+      });
     });
+
   }
   function chAmt(key,delta){
     var k=key.split('|'), id=k[0], i=+k[1];

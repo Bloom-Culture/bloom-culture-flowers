@@ -50,8 +50,10 @@ interface TailorBody {
   budget: string;
   needs: string[];
   note: string;
+  imageUrls?: string[];
   summary: Summary;
 }
+
 
 /* ── HTML helpers ────────────────────────────────────────────────────────── */
 function esc(s: unknown): string {
@@ -232,6 +234,29 @@ function planHtml(name: string, order: Summary): string {
 </body></html>`;
 }
 
+function renderVisionImages(imageUrls?: string[]): string {
+  if (!imageUrls || !imageUrls.length) return "";
+
+  let cards = "";
+  for (let i = 0; i < imageUrls.length; i++) {
+    const url = esc(imageUrls[i]);
+    cards +=
+      `<div style="display:inline-block;margin:0 8px 8px 0;text-align:center;vertical-align:top;">` +
+      `<a href="${url}" target="_blank" style="display:block;text-decoration:none;">` +
+      `<img src="${url}" alt="Inspiration photo ${i + 1}" style="width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid #e2e0d4;display:block;background:#eeece1;" />` +
+      `<span style="font-size:11px;color:#aa2138;margin-top:5px;display:block;font-weight:600;">Photo ${i + 1} ↗</span>` +
+      `</a></div>`;
+  }
+
+  return (
+    `<div style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aa2138;margin:20px 0 10px;">` +
+    `Uploaded Vision &amp; Inspiration Photos (${imageUrls.length})</div>` +
+    `<div style="background:#fff;border:1px solid #e2e0d4;border-radius:12px;padding:14px 14px 6px;margin-bottom:16px;">` +
+    cards +
+    `</div>`
+  );
+}
+
 /** Integration 4: Internal tailor-request email sent to Alison */
 function tailorInternalHtml(p: TailorBody): string {
   const dateStr = formatDate(p.weddingDate);
@@ -285,6 +310,8 @@ function tailorInternalHtml(p: TailorBody): string {
 
       <div style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aa2138;margin:20px 0 10px;">In their words</div>
       <div style="background:#f5e2e4;border-radius:12px;padding:14px 16px;font-size:14.5px;line-height:1.55;color:#2c352a;margin-bottom:16px;">${esc(p.note)}</div>
+
+      ${renderVisionImages(p.imageUrls)}
 
       <div style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aa2138;margin:20px 0 10px;">The package they built</div>
       <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;background:#2b3c2c;color:#f7f6f0;border-radius:12px;padding:14px 18px;margin-bottom:14px;">
@@ -355,8 +382,11 @@ function tailorCopyHtml(p: TailorBody): string {
         <div><b>Your note:</b> ${esc(p.note)}</div>
       </div>
 
+      ${renderVisionImages(p.imageUrls)}
+
       <div style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aa2138;margin:20px 0 10px;">Your flower plan</div>
       ${renderPlan(p.summary.pieces)}
+
 
       <div style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aa2138;margin:20px 0 10px;">Wholesale bunches (your estimate)</div>
       ${renderShop(p.summary.shop, p.summary.total)}
@@ -438,16 +468,22 @@ async function pushToZapier(payload: any) {
   if (!webhookUrl) return;
 
   try {
+    const formattedPayload = {
+      ...payload,
+      imageUrls: payload.imageUrls || [],
+      inspiration_photos: (payload.imageUrls || []).join(", ")
+    };
     const res = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(formattedPayload)
     });
     if (!res.ok) console.error("[Zapier] Error:", await res.text());
   } catch (err) {
     console.error("[Zapier] Fetch Error:", err);
   }
 }
+
 
 /* ── Handlers ────────────────────────────────────────────────────────────── */
 async function handleLead(body: LeadBody) {
